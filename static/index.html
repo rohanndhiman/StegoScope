@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="StegoScope — Advanced forensic analysis web application for detecting hidden data, tampering, and steganography.">
+    <title>StegoScope — Forensic Steganography Suite</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔬</text></svg>">
+</head>
+<body class="theme-dracula">
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="app-logo">
+                    <div class="app-logo-icon">🔬</div>
+                    <h1 class="app-title">StegoScope</h1>
+                </div>
+                <div class="header-actions">
+                    <button class="history-trigger-btn" id="btn-open-history" title="Open Scan History" aria-label="Open Scan History">
+                        📜 Scan History (<span id="history-count">0</span>)
+                    </button>
+                    <!-- Theme switcher -->
+                    <div class="theme-switcher" role="radiogroup" aria-label="Select theme">
+                        <button class="theme-btn active" data-theme="dracula" title="Dracula Purple" aria-checked="true" role="radio">😈</button>
+                        <button class="theme-btn" data-theme="matrix" title="Matrix Green" aria-checked="false" role="radio">📟</button>
+                        <button class="theme-btn" data-theme="tactical" title="Tactical Amber" aria-checked="false" role="radio">📻</button>
+                        <button class="theme-btn" data-theme="frost" title="Nordic Frost" aria-checked="false" role="radio">❄️</button>
+                    </div>
+                </div>
+            </div>
+
+            <p class="app-subtitle">Forensic Steganography &amp; Hidden Data Analysis Suite</p>
+        </header>
+
+        <!-- ============================================================
+             Screen 1: Landing — Mode selection
+             ============================================================ -->
+        <section id="screen-landing" class="screen active">
+            <div class="mode-grid">
+                <!-- Malware & File Check -->
+                <div class="mode-card" id="card-malware" tabindex="0" role="button" aria-label="Select Malware and File Check mode">
+                    <span class="mode-icon">🛡️</span>
+                    <h2 class="mode-title">Malware &amp; File Check</h2>
+                    <p class="mode-description">
+                        General forensic analysis to detect hidden or embedded data,
+                        metadata tampering, and steganographic payloads in files.
+                    </p>
+                    <button class="mode-btn" id="btn-mode-malware">
+                        Start Analysis →
+                    </button>
+                </div>
+
+                <!-- CTF Analysis & Helper -->
+                <div class="mode-card" id="card-ctf" tabindex="0" role="button" aria-label="Select CTF Analysis mode">
+                    <span class="mode-icon">🚩</span>
+                    <h2 class="mode-title">CTF Analysis &amp; Helper</h2>
+                    <p class="mode-description">
+                        Same forensic engine plus a hint system that maps detected signals
+                        to likely CTF techniques and suggests next steps.
+                    </p>
+                    <button class="mode-btn" id="btn-mode-ctf">
+                        Start Analysis →
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             Screen 2: Upload
+             ============================================================ -->
+        <section id="screen-upload" class="screen">
+            <div class="upload-area">
+                <button class="back-btn" id="btn-back-to-landing">
+                    ← Back
+                </button>
+                <span class="current-mode-badge" id="mode-badge">
+                    <span id="mode-badge-icon">🛡️</span>
+                    <span id="mode-badge-text">Malware & File Check</span>
+                </span>
+
+                <!-- Drop zone -->
+                <div class="drop-zone" id="drop-zone" role="button" tabindex="0" aria-label="Upload area. Click or drag files here.">
+                    <span class="drop-zone-icon">📁</span>
+                    <p class="drop-zone-text">
+                        Drag &amp; drop a file here, or <strong>click to browse</strong>
+                    </p>
+                    <p class="drop-zone-hint">
+                        Supports: PNG, JPEG, BMP (images) · WAV, MP3 (audio) · Max 20 MB
+                    </p>
+                </div>
+
+                <!-- Hidden file input -->
+                <input type="file" id="file-input" hidden
+                       accept=".png,.jpg,.jpeg,.bmp,.wav,.mp3">
+
+                <!-- Selected file info -->
+                <div class="file-info" id="file-info">
+                    <span class="file-icon" id="file-type-icon">🖼️</span>
+                    <div class="file-details">
+                        <div class="file-name" id="file-name-display">—</div>
+                        <div class="file-size" id="file-size-display">—</div>
+                    </div>
+                    <button class="file-remove" id="btn-remove-file" aria-label="Remove selected file">✕</button>
+                </div>
+
+                <!-- Analyze button -->
+                <button class="analyze-btn" id="btn-analyze" disabled>
+                    <span class="btn-text">🔍 Analyze File</span>
+                </button>
+
+                <!-- Progress bar and terminal console -->
+                <div class="progress-container" id="progress-container">
+                    <div class="progress-bar-track">
+                        <div class="progress-bar-fill" id="progress-fill"></div>
+                    </div>
+                    
+                    <div class="terminal-log-wrapper">
+                        <div class="terminal-header">
+                            <span class="terminal-dot red"></span>
+                            <span class="terminal-dot yellow"></span>
+                            <span class="terminal-dot green"></span>
+                            <span class="terminal-title">FORENSIC_SCAN.LOG</span>
+                        </div>
+                        <div class="terminal-body" id="terminal-body">
+                            <!-- Populated by JS simulation typing -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Error display -->
+                <div class="error-message" id="upload-error"></div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             Screen 3: Results
+             ============================================================ -->
+        <section id="screen-results" class="screen">
+            <!-- Results header with score gauge -->
+            <div class="results-header">
+                <div class="score-gauge" id="score-gauge">
+                    <div class="score-gauge-ring" id="score-gauge-ring">
+                        <div class="score-gauge-inner">
+                            <span class="score-gauge-value" id="score-value">0</span>
+                            <span class="score-gauge-label">overall</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="overall-label" id="overall-label">
+                    <span class="severity-badge" id="overall-badge">Low</span>
+                </div>
+                <p class="overall-summary" id="overall-summary">
+                    Analysis complete for <strong id="result-filename">file.png</strong>
+                </p>
+            </div>
+
+            <!-- Upgrade: Tabs Navigation -->
+            <div class="results-tabs" role="tablist">
+                <button class="tab-btn active" id="tab-scores-btn" data-tab="scores" role="tab" aria-selected="true" aria-controls="tab-scores-content">📊 Forensic Scores</button>
+                <button class="tab-btn" id="tab-stegsolve-btn" data-tab="stegsolve" role="tab" aria-selected="false" aria-controls="tab-stegsolve-content">🔍 Stegsolve Explorer</button>
+                <button class="tab-btn" id="tab-strings-btn" data-tab="strings" role="tab" aria-selected="false" aria-controls="tab-strings-content">📜 Strings Scan</button>
+                <button class="tab-btn" id="tab-binwalk-btn" data-tab="binwalk" role="tab" aria-selected="false" aria-controls="tab-binwalk-content">📦 Binwalk Extract</button>
+                <button class="tab-btn" id="tab-steghide-btn" data-tab="steghide" role="tab" aria-selected="false" aria-controls="tab-steghide-content">🔑 Steghide Decrypt</button>
+            </div>
+
+            <!-- Tab Content 1: Forensic Scores Grid -->
+            <div class="tab-content active" id="tab-scores-content" role="tabpanel" aria-labelledby="tab-scores-btn">
+                <div class="techniques-grid" id="techniques-grid">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+            <!-- Tab Content 2: Stegsolve Explorer -->
+            <div class="tab-content" id="tab-stegsolve-content" role="tabpanel" aria-labelledby="tab-stegsolve-btn" style="display: none;">
+                <div class="stegsolve-container">
+                    <div class="stegsolve-visualizer">
+                        <div class="canvas-zoom-container">
+                            <canvas id="stegsolve-canvas"></canvas>
+                        </div>
+                    </div>
+                    <div class="stegsolve-controls">
+                        <div class="control-card">
+                            <h3 class="control-card-title">🔬 Color Channel</h3>
+                            <div class="control-btn-grid" data-group="channel">
+                                <button class="control-btn active" data-value="r">Red Channel</button>
+                                <button class="control-btn" data-value="g">Green Channel</button>
+                                <button class="control-btn" data-value="b">Blue Channel</button>
+                                <button class="control-btn" data-value="a">Alpha Channel</button>
+                            </div>
+                        </div>
+                        
+                        <div class="control-card">
+                            <h3 class="control-card-title">🔢 Bit Plane Selection</h3>
+                            <div class="control-btn-grid bits" data-group="bit">
+                                <button class="control-btn active" data-value="0">Bit 0 (LSB)</button>
+                                <button class="control-btn" data-value="1">Bit 1</button>
+                                <button class="control-btn" data-value="2">Bit 2</button>
+                                <button class="control-btn" data-value="3">Bit 3</button>
+                                <button class="control-btn" data-value="4">Bit 4</button>
+                                <button class="control-btn" data-value="5">Bit 5</button>
+                                <button class="control-btn" data-value="6">Bit 6</button>
+                                <button class="control-btn" data-value="7">Bit 7 (MSB)</button>
+                            </div>
+                        </div>
+                        
+                        <div class="control-card">
+                            <h3 class="control-card-title">🎨 Visualization Mode</h3>
+                            <div class="control-btn-grid" data-group="mode">
+                                <button class="control-btn active" data-value="mono">Monochromatic (0/255)</button>
+                                <button class="control-btn" data-value="normal">True Bit value</button>
+                                <button class="control-btn" data-value="invert">Inverted Mono</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content 3: Strings scan terminal -->
+            <div class="tab-content" id="tab-strings-content" role="tabpanel" aria-labelledby="tab-strings-btn" style="display: none;">
+                <div class="strings-container">
+                    <div class="strings-header-bar">
+                        <span class="strings-count" id="strings-count">Discovered strings: 0</span>
+                        <input type="text" id="strings-search" placeholder="Search / filter strings (e.g. flag, key, admin)..." aria-label="Search extracted strings">
+                    </div>
+                    <div class="strings-console" id="strings-console">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content 4: Binwalk magic byte signatures -->
+            <div class="tab-content" id="tab-binwalk-content" role="tabpanel" aria-labelledby="tab-binwalk-btn" style="display: none;">
+                <div class="binwalk-container">
+                    <div class="binwalk-desc">
+                        <h3>📦 Embedded Magic Signatures</h3>
+                        <p>Scans the raw binary data for embedded files, compressed packages, or matching header blocks.</p>
+                    </div>
+                    <div class="binwalk-table-wrapper">
+                        <table class="binwalk-table">
+                            <thead>
+                                <tr>
+                                    <th>Signature Offset</th>
+                                    <th>Hexadecimal</th>
+                                    <th>Matching Format</th>
+                                    <th>Estimated size</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="binwalk-table-body">
+                                <!-- Populated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab Content 5: Steghide passphrase LSB decryption -->
+            <div class="tab-content" id="tab-steghide-content" role="tabpanel" aria-labelledby="tab-steghide-btn" style="display: none;">
+                <div class="steghide-container">
+                    <div class="steghide-form-card">
+                        <h3>🔑 Steghide-style Decryptor</h3>
+                        <p>If this payload is passphrase-protected, enter the secret password to extract the hidden data using deterministic seeded LSB traversal.</p>
+                        <div class="steghide-input-group">
+                            <input type="text" id="steghide-passphrase" placeholder="Enter extraction password (e.g. stegoscope)..." aria-label="Passphrase input">
+                            <button class="steghide-submit-btn" id="btn-steghide-decrypt">
+                                <span class="btn-text">🔓 Decrypt Payload</span>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="steghide-result-box" id="steghide-result-box" style="display: none;">
+                        <div class="steghide-result-header" id="steghide-result-header">DECRYPT_SUCCESS</div>
+                        <pre class="steghide-result-text" id="steghide-result-text"></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendations panel (Both modes) -->
+            <div class="ctf-panel" id="ctf-panel" style="display: none;">
+                <h2 class="ctf-panel-title" id="ctf-panel-title">🧩 Suggested Next Steps</h2>
+                <div id="ctf-suggestions-list">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+
+
+            <!-- Disclaimer -->
+            <div class="disclaimer" id="disclaimer">
+                <span class="disclaimer-icon">⚠️</span>
+                This score combines multiple independent forensic signals.
+                No single check is conclusive on its own.
+            </div>
+
+            <!-- Reset -->
+            <button class="reset-btn" id="btn-reset">
+                🔄 Check Another File
+            </button>
+        </section>
+    </div>
+
+    <!-- Image lightbox -->
+    <div class="lightbox-overlay" id="lightbox" role="dialog" aria-label="Image zoom view">
+        <img id="lightbox-img" src="" alt="Enlarged visualization">
+    </div>
+
+    <!-- History Drawer Overlay & Container -->
+    <div class="history-drawer" id="history-drawer" role="dialog" aria-label="Scan History" aria-hidden="true">
+        <div class="drawer-header">
+            <h2 class="drawer-title">📜 Scan History</h2>
+            <button class="close-drawer-btn" id="btn-close-history" aria-label="Close history">✕</button>
+        </div>
+        <div class="drawer-body">
+            <div class="history-controls">
+                <button class="clear-history-btn" id="btn-clear-history">🗑️ Clear All History</button>
+            </div>
+            <div class="history-list" id="history-list">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+    </div>
+    <div class="drawer-overlay" id="drawer-overlay"></div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
+
