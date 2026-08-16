@@ -1,6 +1,4 @@
 <div align="center">
-  <img src="assets/landing.png" alt="StegoScope Banner" width="800">
-
   <h1>🔍 StegoScope</h1>
   <p><strong>Advanced Forensic Steganography & Hidden Data Analysis Suite</strong></p>
 
@@ -10,7 +8,6 @@
     <a href="https://github.com/rohanndhiman/StegoScope/issues"><img src="https://img.shields.io/github/issues/rohanndhiman/StegoScope?style=for-the-badge&color=ff0000" alt="Issues Badge"/></a>
     <img src="https://img.shields.io/badge/Python-3.12-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python Badge">
     <img src="https://img.shields.io/badge/Flask-Web_App-black?style=for-the-badge&logo=flask&logoColor=white" alt="Flask Badge">
-    <img src="https://img.shields.io/badge/Deployed_on-Vercel-black?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel Badge">
   </p>
 </div>
 
@@ -27,24 +24,9 @@
 - **🛡️ Two Operation Modes:** 
   - **Malware & File Check Mode:** Provides a general-purpose forensic verdict for SOC analysts and incident responders.
   - **CTF Analysis & Helper Mode:** Augments findings with technique-specific hints and actionable command-line snippets for Capture The Flag challenges.
-- **⚡ Pure Python Detectors:** Implements classic forensic utilities (`steghide`, `binwalk`, `strings`) natively in Python without relying on Linux binaries, ensuring 100% cross-platform and Serverless compatibility!
+- **⚡ Pure Python Detectors:** Implements classic forensic utilities (`steghide`, `binwalk`, `strings`) natively in Python without relying on Linux binaries, ensuring 100% cross-platform compatibility!
 - **📊 Interactive Scan History:** View, restore, and compare previous forensic scans seamlessly using local storage caching.
 - **💡 Contextual Action Plans:** Suggests the next best forensic tool to run based on the exact anomalies detected in the file.
-- **🚀 Serverless Ready:** Pre-configured with `vercel.json` for instant deployment to Vercel Serverless Functions.
-
----
-
-## 📷 Screenshots
-
-### Forensic Scan Results
-<div align="center">
-  <img src="assets/results.png" alt="Forensic Results Dashboard" width="800">
-</div>
-
-### Dynamic CTF Recommendations & UI Flow
-<div align="center">
-  <img src="assets/demo.webp" alt="UI Workflow Demo" width="800">
-</div>
 
 ---
 
@@ -95,20 +77,6 @@ python generate_samples.py
 python app.py
 ```
 Visit `http://localhost:5000` in your browser.
-
----
-
-## ☁️ Deploying to Vercel
-
-StegoScope is architected to be 100% compatible with Vercel's Serverless Functions out of the box!
-
-1. Log in to [Vercel](https://vercel.com/) with your GitHub account.
-2. Click **Add New...** → **Project**.
-3. Import your cloned `StegoScope` repository.
-4. Leave the Framework Preset as **Other**.
-5. Click **Deploy**.
-
-Vercel will automatically read the `vercel.json` file and map the Flask application via `@vercel/python`.
 
 ---
 
