@@ -314,45 +314,72 @@ def analyze():
     eof_data = None
 
     try:
-        if file_type in IMAGE_TYPES:
-            category = "image"
-            # Core image detectors
-            technique_results.append(lsb_analyze(file_bytes, file_type))
-            technique_results.append(metadata_analyze(file_bytes, file_type))
-            technique_results.append(ela_analyze(file_bytes, file_type))
+        category = "image" if file_type in IMAGE_TYPES else "audio"
+
+        if mode == "malware":
+            # MALWARE MODE: Focus on metadata, entropy, IOC strings, binwalk extraction, EOF payloads
+            if category == "image":
+                technique_results.append(metadata_analyze(file_bytes, file_type))
+                technique_results.append(ela_analyze(file_bytes, file_type))
+            else:
+                technique_results.append(spectrogram_analyze(file_bytes, file_type))
+            
+            eof_res = eof_analyze(file_bytes, file_type)
+            binwalk_res = binwalk_analyze(file_bytes, file_type)
+            strings_res = strings_analyze(file_bytes, file_type)
+            
+            technique_results.append(eof_res)
+            technique_results.append(binwalk_res)
+            technique_results.append(strings_res)
+
+            eof_data = {
+                "trailing_size": eof_res["trailing_size"],
+                "hex_preview": eof_res["hex_preview"],
+                "payload_b64": eof_res["payload_b64"],
+            }
+            binwalk_data = binwalk_res["detected_files"]
+            strings_data = {
+                "strings": strings_res["strings"],
+                "total_count": strings_res["total_count"],
+                "flags_found": [], # Malware mode doesn't care about flags
+                "ioc_found": strings_res.get("ioc_found", []), # Suppose strings analyzer returns IOCs
+            }
+            steghide_data = None # Not relevant for malware usually
+
         else:
-            category = "audio"
-            # Core audio detectors
-            technique_results.append(spectrogram_analyze(file_bytes, file_type))
-            technique_results.append(audio_lsb_analyze(file_bytes, file_type))
+            # CTF MODE: Focus on LSB stego, flags, steghide, binwalk hidden zips
+            if category == "image":
+                technique_results.append(lsb_analyze(file_bytes, file_type))
+                # Exif is also useful in CTF
+                technique_results.append(metadata_analyze(file_bytes, file_type))
+            else:
+                technique_results.append(audio_lsb_analyze(file_bytes, file_type))
+                technique_results.append(spectrogram_analyze(file_bytes, file_type))
 
-        # Run the general Linux-style checks for both images and audio
-        eof_res = eof_analyze(file_bytes, file_type)
-        binwalk_res = binwalk_analyze(file_bytes, file_type)
-        strings_res = strings_analyze(file_bytes, file_type)
-        steghide_res = steghide_analyze(file_bytes, file_type, passphrase)
+            eof_res = eof_analyze(file_bytes, file_type)
+            binwalk_res = binwalk_analyze(file_bytes, file_type)
+            strings_res = strings_analyze(file_bytes, file_type)
+            steghide_res = steghide_analyze(file_bytes, file_type, passphrase)
 
-        # Append to technique cards
-        technique_results.append(eof_res)
-        technique_results.append(binwalk_res)
-        technique_results.append(strings_res)
-        technique_results.append(steghide_res)
+            technique_results.append(eof_res)
+            technique_results.append(steghide_res)
+            technique_results.append(binwalk_res)
+            technique_results.append(strings_res)
 
-        # Extract specific payload data
-        eof_data = {
-            "trailing_size": eof_res["trailing_size"],
-            "hex_preview": eof_res["hex_preview"],
-            "payload_b64": eof_res["payload_b64"],
-        }
-        binwalk_data = binwalk_res["detected_files"]
-        strings_data = {
-            "strings": strings_res["strings"],
-            "total_count": strings_res["total_count"],
-            "flags_found": strings_res["flags_found"],
-        }
-        steghide_data = {
-            "decrypted_text": steghide_res["decrypted_text"],
-        }
+            eof_data = {
+                "trailing_size": eof_res["trailing_size"],
+                "hex_preview": eof_res["hex_preview"],
+                "payload_b64": eof_res["payload_b64"],
+            }
+            binwalk_data = binwalk_res["detected_files"]
+            strings_data = {
+                "strings": strings_res["strings"],
+                "total_count": strings_res["total_count"],
+                "flags_found": strings_res["flags_found"],
+            }
+            steghide_data = {
+                "decrypted_text": steghide_res["decrypted_text"],
+            }
 
     except Exception as e:
         return jsonify({

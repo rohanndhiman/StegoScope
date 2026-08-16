@@ -172,155 +172,6 @@
     }
 
     // -----------------------------------------------------------------------
-    // UI Navigation & Mode Selection
-    // -----------------------------------------------------------------------
-    function showScreen(screenId) {
-        Object.values(screens).forEach(s => s.classList.remove("active"));
-        screens[screenId].classList.add("active");
-    }
-
-    function selectMode(mode) {
-        currentMode = mode;
-        const isMalware = mode === "malware";
-        
-        cardMalware.classList.toggle("selected", isMalware);
-        cardCTF.classList.toggle("selected", !isMalware);
-        
-        modeBadgeText.textContent = isMalware ? "Malware & File Check" : "CTF Analysis & Helper";
-        
-        setTimeout(() => {
-            showScreen("upload");
-        }, 300);
-    }
-
-    // Mode click events
-    [cardMalware, btnModeMalware].forEach(el => {
-        if (el) el.addEventListener("click", () => selectMode("malware"));
-    });
-    [cardCTF, btnModeCTF].forEach(el => {
-        if (el) el.addEventListener("click", () => selectMode("ctf"));
-    });
-
-    // Back to landing
-    if (btnBack) {
-        btnBack.addEventListener("click", () => showScreen("landing"));
-    }
-
-    // -----------------------------------------------------------------------
-    // File Upload Handlers
-    // -----------------------------------------------------------------------
-    if (dropZone && fileInput) {
-        dropZone.addEventListener("click", () => fileInput.click());
-        
-        dropZone.addEventListener("dragover", (e) => {
-            e.preventDefault();
-            dropZone.classList.add("drag-over");
-        });
-        
-        dropZone.addEventListener("dragleave", () => {
-            dropZone.classList.remove("drag-over");
-        });
-        
-        dropZone.addEventListener("drop", (e) => {
-            e.preventDefault();
-            dropZone.classList.remove("drag-over");
-            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-                handleFileSelect(e.dataTransfer.files[0]);
-            }
-        });
-        
-        fileInput.addEventListener("change", (e) => {
-            if (e.target.files && e.target.files.length > 0) {
-                handleFileSelect(e.target.files[0]);
-            }
-        });
-    }
-
-    if (btnRemoveFile) {
-        btnRemoveFile.addEventListener("click", () => {
-            selectedFile = null;
-            fileInput.value = "";
-            fileInfo.classList.remove("visible");
-            dropZone.classList.remove("has-file");
-            btnAnalyze.disabled = true;
-            uploadError.classList.remove("visible");
-        });
-    }
-
-    function formatSize(bytes) {
-        if (bytes === 0) return '0 B';
-        const k = 1024;
-        const sizes = ['B', 'KB', 'MB', 'GB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(k));
-        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-    }
-
-    function handleFileSelect(file) {
-        uploadError.classList.remove("visible");
-        
-        const ext = file.name.substring(file.name.lastIndexOf(".")).toLowerCase();
-        if (!ALLOWED_EXTENSIONS.includes(ext)) {
-            uploadError.textContent = `Unsupported file type: ${ext}. Please upload an image or audio file.`;
-            uploadError.classList.add("visible");
-            return;
-        }
-        if (file.size > MAX_SIZE) {
-            uploadError.textContent = `File too large (${formatSize(file.size)}). Max allowed is 20 MB.`;
-            uploadError.classList.add("visible");
-            return;
-        }
-
-        selectedFile = file;
-        fileNameDisplay.textContent = file.name;
-        fileSizeDisplay.textContent = formatSize(file.size);
-        
-        fileInfo.classList.add("visible");
-        dropZone.classList.add("has-file");
-        btnAnalyze.disabled = false;
-    }
-
-    if (btnAnalyze) {
-        btnAnalyze.addEventListener("click", async () => {
-            if (!selectedFile) return;
-            btnAnalyze.disabled = true;
-            btnAnalyze.classList.add("loading");
-            progressContainer.classList.add("visible");
-            
-            const formData = new FormData();
-            formData.append("file", selectedFile);
-            formData.append("mode", currentMode);
-
-            try {
-                // Let the UI catch up
-                await new Promise(r => setTimeout(r, 100));
-                
-                const response = await fetch("/analyze", {
-                    method: "POST",
-                    body: formData
-                });
-                
-                const data = await response.json();
-                
-                if (!response.ok) {
-                    throw new Error(data.error || "Server responded with an error");
-                }
-                
-                // Simulate terminal output based on file type detected by backend
-                await simulateForensicScan(data.file_type || "binary", data.file_ext || "unknown");
-                
-                renderResults(data);
-                
-            } catch (err) {
-                uploadError.textContent = "Analysis failed: " + err.message;
-                uploadError.classList.add("visible");
-                btnAnalyze.disabled = false;
-                btnAnalyze.classList.remove("loading");
-                progressContainer.classList.remove("visible");
-            }
-        });
-    }
-
-    // -----------------------------------------------------------------------
     // Scan History System
     // -----------------------------------------------------------------------
     let scanHistory = [];
@@ -1298,12 +1149,18 @@
         extractedStrings = (data.strings_data && data.strings_data.strings) || [];
         binwalkFiles = data.binwalk_files || [];
         
-        // Hide Stegsolve tab button if not an image
-        if (data.file_type === "image") {
-            tabStegsolveBtn.style.display = "inline-block";
-            setupStegsolve(data.original_file);
-        } else {
+        // Hide/Show tabs based on mode
+        const tabSteghideBtn = document.getElementById("tab-steghide-btn");
+        
+        if (currentMode === "malware") {
+            // Malware mode doesn't need Stegsolve or Steghide
             tabStegsolveBtn.style.display = "none";
+            if (tabSteghideBtn) tabSteghideBtn.style.display = "none";
+        } else {
+            // CTF mode uses Stegsolve (for images) and Steghide
+            tabStegsolveBtn.style.display = (data.file_type === "image") ? "inline-block" : "none";
+            if (tabSteghideBtn) tabSteghideBtn.style.display = "inline-block";
+            if (data.file_type === "image") setupStegsolve(data.original_file);
         }
 
         // Render Forensic Scores technique cards
