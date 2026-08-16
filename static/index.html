@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="StegoScope — Advanced forensic analysis web application for detecting hidden data, tampering, and steganography.">
     <title>StegoScope — Forensic Steganography Suite</title>
-    <link rel="stylesheet" href="/static/style.css?v=8">
+    <link rel="stylesheet" href="/static/style.css?v=9">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔬</text></svg>">
 </head>
 <body class="theme-glass">
@@ -91,13 +91,15 @@
              ============================================================ -->
         <section id="screen-upload" class="screen">
             <div class="upload-area">
-                <button class="back-btn" id="btn-back-to-landing">
-                    ← Back
-                </button>
-                <span class="current-mode-badge" id="mode-badge">
-                    <span id="mode-badge-icon">🛡️</span>
-                    <span id="mode-badge-text">Malware & File Check</span>
-                </span>
+                <div class="upload-header-row">
+                    <button class="back-btn" id="btn-back-to-landing">
+                        ← Back
+                    </button>
+                    <span class="current-mode-badge" id="mode-badge">
+                        <span id="mode-badge-icon">🛡️</span>
+                        <span id="mode-badge-text">Malware & File Check</span>
+                    </span>
+                </div>
 
                 <!-- Drop zone -->
                 <div class="drop-zone" id="drop-zone" role="button" tabindex="0" aria-label="Upload area. Click or drag files here.">

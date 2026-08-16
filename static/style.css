@@ -603,23 +603,36 @@ body {
    Upload screen
    ----------------------------------------------------------------------- */
 .upload-area {
-    max-width: 600px;
+    max-width: 680px;
     margin: 0 auto;
+    padding: 2.25rem 2.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.upload-header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 0.25rem;
 }
 
 .back-btn {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.4rem 0.8rem;
+    padding: 0.5rem 1.1rem;
     background: transparent;
     color: var(--text-secondary);
     border: 1px solid var(--border-default);
-    border-radius: var(--radius-sm);
+    border-radius: var(--radius-md);
     font-size: 0.85rem;
+    font-weight: 600;
     cursor: pointer;
     transition: all var(--transition-fast);
-    margin-bottom: 1.5rem;
+    margin: 0;
 }
 
 .back-btn:hover {
@@ -631,25 +644,26 @@ body {
     display: inline-flex;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.3rem 0.8rem;
+    padding: 0.4rem 1.1rem;
     background: var(--bg-tertiary);
     border: 1px solid var(--border-default);
     border-radius: var(--radius-xl);
     font-size: 0.8rem;
+    font-weight: 600;
     color: var(--accent-blue);
-    margin-bottom: 1.5rem;
-    margin-left: 0.5rem;
+    margin: 0;
 }
 
 .drop-zone {
     border: 2px dashed var(--border-default);
     border-radius: var(--radius-lg);
-    padding: 3rem 2rem;
+    padding: 3.5rem 2rem;
     text-align: center;
     transition: all var(--transition-med);
     cursor: pointer;
     background: var(--bg-glass);
     backdrop-filter: var(--blur-glass);
+    margin: 0;
 }
 
 .drop-zone.dragover {
