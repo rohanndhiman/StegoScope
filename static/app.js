@@ -39,12 +39,10 @@
 
     // Upload
     const btnBack        = document.getElementById("btn-back-to-landing");
-    const modeBadgeIcon  = document.getElementById("mode-badge-icon");
     const modeBadgeText  = document.getElementById("mode-badge-text");
     const dropZone       = document.getElementById("drop-zone");
     const fileInput      = document.getElementById("file-input");
     const fileInfo       = document.getElementById("file-info");
-    const fileTypeIcon   = document.getElementById("file-type-icon");
     const fileNameDisplay = document.getElementById("file-name-display");
     const fileSizeDisplay = document.getElementById("file-size-display");
     const btnRemoveFile  = document.getElementById("btn-remove-file");
@@ -114,26 +112,63 @@
     const MAX_SIZE = 20 * 1024 * 1024; // 20 MB
 
     // -----------------------------------------------------------------------
-    // Theme Engine
+    // Theme Engine (Settings Panel, Light/Dark Toggle, Structural Themes)
     // -----------------------------------------------------------------------
-    const savedTheme = localStorage.getItem("stegoscope-theme") || "dracula";
-    setTheme(savedTheme);
+    const settingsToggle = document.getElementById("btn-toggle-settings");
+    const settingsPanel  = document.getElementById("settings-panel");
+    const modeToggle     = document.getElementById("mode-toggle-checkbox");
 
+    // Restore saved preferences
+    const savedStructure = localStorage.getItem("stegoscope-structure") || "glass";
+    const savedColorMode = localStorage.getItem("stegoscope-color-mode") || "dark";
+
+    applyStructuralTheme(savedStructure);
+    applyColorMode(savedColorMode);
+
+    // Settings panel toggle
+    settingsToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        settingsPanel.classList.toggle("show");
+    });
+    document.addEventListener("click", (e) => {
+        if (!settingsPanel.contains(e.target) && e.target !== settingsToggle) {
+            settingsPanel.classList.remove("show");
+        }
+    });
+
+    // Light / Dark toggle
+    modeToggle.addEventListener("change", () => {
+        applyColorMode(modeToggle.checked ? "light" : "dark");
+    });
+
+    function applyColorMode(mode) {
+        if (mode === "light") {
+            document.body.classList.add("light-mode");
+            modeToggle.checked = true;
+        } else {
+            document.body.classList.remove("light-mode");
+            modeToggle.checked = false;
+        }
+        localStorage.setItem("stegoscope-color-mode", mode);
+    }
+
+    // Structural theme buttons
     document.querySelectorAll(".theme-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             const theme = btn.getAttribute("data-theme");
-            setTheme(theme);
+            applyStructuralTheme(theme);
         });
     });
 
-    function setTheme(theme) {
-        document.body.className = `theme-${theme}`;
+    function applyStructuralTheme(theme) {
+        // Remove all structural theme classes
+        document.body.classList.remove("theme-minimal", "theme-glass", "theme-cyber", "theme-classic");
+        document.body.classList.add(`theme-${theme}`);
         document.querySelectorAll(".theme-btn").forEach(b => {
             const match = b.getAttribute("data-theme") === theme;
             b.classList.toggle("active", match);
-            b.setAttribute("aria-checked", match ? "true" : "false");
         });
-        localStorage.setItem("stegoscope-theme", theme);
+        localStorage.setItem("stegoscope-structure", theme);
     }
 
     // -----------------------------------------------------------------------

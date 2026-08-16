@@ -7,7 +7,7 @@ import os
 import io
 import struct
 import base64
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, jsonify, send_from_directory, session, redirect, url_for, render_template_string
 
 # Detector imports
 from detectors.lsb import analyze as lsb_analyze
@@ -30,6 +30,55 @@ from ctf_helper import get_ctf_suggestions
 # ---------------------------------------------------------------------------
 app = Flask(__name__, static_folder="static", static_url_path="/static")
 app.config["MAX_CONTENT_LENGTH"] = 20 * 1024 * 1024  # 20 MB upload limit
+app.secret_key = os.environ.get("FLASK_SECRET_KEY", "super_secret_stegoscope_key")
+APP_PASSWORD = os.environ.get("APP_PASSWORD", "stego123")
+
+@app.before_request
+def check_auth():
+    if request.endpoint in ['analyze'] and not session.get('logged_in'):
+        return jsonify({"error": "Unauthorized. Please log in."}), 401
+    if request.endpoint == 'serve_index' and not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = ""
+    if request.method == 'POST':
+        if request.form.get('password') == APP_PASSWORD:
+            session['logged_in'] = True
+            return redirect(url_for('serve_index'))
+        else:
+            error = "Invalid passcode."
+    
+    return render_template_string('''
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login - StegoScope</title>
+        <style>
+            body { background-color: #0d1117; color: #e6edf3; font-family: system-ui, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+            .login-box { background: rgba(22, 27, 34, 0.85); padding: 2rem; border-radius: 10px; border: 1px solid #30363d; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+            h1 { margin-top: 0; }
+            input[type="password"] { padding: 10px; width: 80%; border: 1px solid #30363d; border-radius: 6px; background: #0d1117; color: white; margin-bottom: 1rem; }
+            button { padding: 10px 20px; background: #bc8cff; color: #0d1117; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+            .error { color: #f85149; margin-bottom: 1rem; }
+        </style>
+    </head>
+    <body>
+        <div class="login-box">
+            <h1>🔬 StegoScope</h1>
+            <p>Authentication Required</p>
+            {% if error %}<div class="error">{{ error }}</div>{% endif %}
+            <form method="post">
+                <input type="password" name="password" placeholder="Enter Passcode" required autofocus><br>
+                <button type="submit">Access System</button>
+            </form>
+        </div>
+    </body>
+    </html>
+    ''', error=error)
 
 # Supported MIME signatures (magic bytes)
 MAGIC_SIGNATURES = {

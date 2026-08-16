@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/static/style.css">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔬</text></svg>">
 </head>
-<body class="theme-dracula">
+<body class="theme-glass">
     <div class="app-container">
         <!-- Header -->
         <header class="app-header">
@@ -19,14 +19,34 @@
                 </div>
                 <div class="header-actions">
                     <button class="history-trigger-btn" id="btn-open-history" title="Open Scan History" aria-label="Open Scan History">
-                        📜 Scan History (<span id="history-count">0</span>)
+                        Scan History (<span id="history-count">0</span>)
                     </button>
-                    <!-- Theme switcher -->
-                    <div class="theme-switcher" role="radiogroup" aria-label="Select theme">
-                        <button class="theme-btn active" data-theme="dracula" title="Dracula Purple" aria-checked="true" role="radio">😈</button>
-                        <button class="theme-btn" data-theme="matrix" title="Matrix Green" aria-checked="false" role="radio">📟</button>
-                        <button class="theme-btn" data-theme="tactical" title="Tactical Amber" aria-checked="false" role="radio">📻</button>
-                        <button class="theme-btn" data-theme="frost" title="Nordic Frost" aria-checked="false" role="radio">❄️</button>
+                    <!-- Settings Menu -->
+                    <div class="settings-container">
+                        <button class="settings-toggle-btn" id="btn-toggle-settings" aria-label="Toggle Settings">Settings</button>
+                        <div class="settings-panel" id="settings-panel">
+                            <div class="setting-row">
+                                <span class="setting-label">Light Mode</span>
+                                <label class="switch">
+                                    <input type="checkbox" id="mode-toggle-checkbox">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="setting-row theme-switcher" role="radiogroup" aria-label="Select theme">
+                                <button class="theme-btn active" data-theme="minimal" role="radio">
+                                    <span class="theme-emoji">🔳</span><span class="theme-name">Minimal</span>
+                                </button>
+                                <button class="theme-btn" data-theme="glass" role="radio">
+                                    <span class="theme-emoji">🪞</span><span class="theme-name">Glass</span>
+                                </button>
+                                <button class="theme-btn" data-theme="cyber" role="radio">
+                                    <span class="theme-emoji">⚡</span><span class="theme-name">Cyber</span>
+                                </button>
+                                <button class="theme-btn" data-theme="classic" role="radio">
+                                    <span class="theme-emoji">📦</span><span class="theme-name">Classic</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -41,7 +61,6 @@
             <div class="mode-grid">
                 <!-- Malware & File Check -->
                 <div class="mode-card" id="card-malware" tabindex="0" role="button" aria-label="Select Malware and File Check mode">
-                    <span class="mode-icon">🛡️</span>
                     <h2 class="mode-title">Malware &amp; File Check</h2>
                     <p class="mode-description">
                         General forensic analysis to detect hidden or embedded data,
@@ -54,7 +73,6 @@
 
                 <!-- CTF Analysis & Helper -->
                 <div class="mode-card" id="card-ctf" tabindex="0" role="button" aria-label="Select CTF Analysis mode">
-                    <span class="mode-icon">🚩</span>
                     <h2 class="mode-title">CTF Analysis &amp; Helper</h2>
                     <p class="mode-description">
                         Same forensic engine plus a hint system that maps detected signals
@@ -76,13 +94,11 @@
                     ← Back
                 </button>
                 <span class="current-mode-badge" id="mode-badge">
-                    <span id="mode-badge-icon">🛡️</span>
                     <span id="mode-badge-text">Malware & File Check</span>
                 </span>
 
                 <!-- Drop zone -->
                 <div class="drop-zone" id="drop-zone" role="button" tabindex="0" aria-label="Upload area. Click or drag files here.">
-                    <span class="drop-zone-icon">📁</span>
                     <p class="drop-zone-text">
                         Drag &amp; drop a file here, or <strong>click to browse</strong>
                     </p>
@@ -97,7 +113,6 @@
 
                 <!-- Selected file info -->
                 <div class="file-info" id="file-info">
-                    <span class="file-icon" id="file-type-icon">🖼️</span>
                     <div class="file-details">
                         <div class="file-name" id="file-name-display">—</div>
                         <div class="file-size" id="file-size-display">—</div>
