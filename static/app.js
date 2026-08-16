@@ -39,6 +39,7 @@
 
     // Upload
     const btnBack        = document.getElementById("btn-back-to-landing");
+    const modeBadgeIcon  = document.getElementById("mode-badge-icon");
     const modeBadgeText  = document.getElementById("mode-badge-text");
     const dropZone       = document.getElementById("drop-zone");
     const fileInput      = document.getElementById("file-input");
