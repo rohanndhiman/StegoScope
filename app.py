@@ -35,9 +35,10 @@ APP_PASSWORD = os.environ.get("APP_PASSWORD", "stego123")
 
 @app.before_request
 def check_auth():
-    if request.endpoint in ['analyze'] and not session.get('logged_in'):
-        return jsonify({"error": "Unauthorized. Please log in."}), 401
-    if request.endpoint == 'serve_index' and not session.get('logged_in'):
+    # Allow static files and the login route through
+    if request.endpoint in ('login', 'static'):
+        return
+    if not session.get('logged_in'):
         return redirect(url_for('login'))
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -46,7 +47,7 @@ def login():
     if request.method == 'POST':
         if request.form.get('password') == APP_PASSWORD:
             session['logged_in'] = True
-            return redirect(url_for('serve_index'))
+            return redirect(url_for('index'))
         else:
             error = "Invalid passcode."
     
@@ -57,22 +58,109 @@ def login():
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Login - StegoScope</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
         <style>
-            body { background-color: #0d1117; color: #e6edf3; font-family: system-ui, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
-            .login-box { background: rgba(22, 27, 34, 0.85); padding: 2rem; border-radius: 10px; border: 1px solid #30363d; text-align: center; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
-            h1 { margin-top: 0; }
-            input[type="password"] { padding: 10px; width: 80%; border: 1px solid #30363d; border-radius: 6px; background: #0d1117; color: white; margin-bottom: 1rem; }
-            button { padding: 10px 20px; background: #bc8cff; color: #0d1117; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
-            .error { color: #f85149; margin-bottom: 1rem; }
+            * { margin: 0; padding: 0; box-sizing: border-box; }
+            body {
+                background-color: #0d1117;
+                color: #e6edf3;
+                font-family: 'Inter', system-ui, sans-serif;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                height: 100vh;
+                overflow: hidden;
+            }
+            body::before {
+                content: '';
+                position: fixed;
+                top: 0; left: 0; right: 0; bottom: 0;
+                background-image:
+                    linear-gradient(#21262d 1px, transparent 1px),
+                    linear-gradient(90deg, #21262d 1px, transparent 1px);
+                background-size: 60px 60px;
+                opacity: 0.3;
+                pointer-events: none;
+            }
+            .login-box {
+                position: relative;
+                background: rgba(22, 27, 34, 0.85);
+                backdrop-filter: blur(16px);
+                padding: 3rem 2.5rem;
+                border-radius: 16px;
+                border: 1px solid #30363d;
+                text-align: center;
+                box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+                width: 380px;
+                max-width: 90vw;
+            }
+            .logo-icon {
+                width: 56px; height: 56px;
+                background: linear-gradient(135deg, #58a6ff, #bc8cff);
+                border-radius: 12px;
+                display: flex; align-items: center; justify-content: center;
+                margin: 0 auto 1rem;
+                font-size: 1.8rem;
+                box-shadow: 0 0 24px rgba(88, 166, 255, 0.3);
+            }
+            h1 {
+                font-size: 1.8rem;
+                font-weight: 700;
+                background: linear-gradient(135deg, #58a6ff, #bc8cff);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                margin-bottom: 0.25rem;
+            }
+            .subtitle { color: #8b949e; font-size: 0.9rem; margin-bottom: 2rem; }
+            input[type="password"] {
+                padding: 12px 16px;
+                width: 100%;
+                border: 1px solid #30363d;
+                border-radius: 10px;
+                background: #0d1117;
+                color: #e6edf3;
+                font-size: 1rem;
+                font-family: inherit;
+                margin-bottom: 1rem;
+                transition: border-color 0.2s;
+                outline: none;
+            }
+            input[type="password"]:focus { border-color: #58a6ff; }
+            button {
+                padding: 12px 24px;
+                width: 100%;
+                background: linear-gradient(135deg, #58a6ff, #bc8cff);
+                color: #0d1117;
+                border: none;
+                border-radius: 10px;
+                cursor: pointer;
+                font-weight: 700;
+                font-size: 1rem;
+                font-family: inherit;
+                transition: opacity 0.2s, transform 0.1s;
+            }
+            button:hover { opacity: 0.9; }
+            button:active { transform: scale(0.98); }
+            .error {
+                color: #f85149;
+                background: rgba(248, 81, 73, 0.1);
+                padding: 8px 12px;
+                border-radius: 8px;
+                margin-bottom: 1rem;
+                font-size: 0.9rem;
+            }
         </style>
     </head>
     <body>
         <div class="login-box">
-            <h1>🔬 StegoScope</h1>
-            <p>Authentication Required</p>
+            <div class="logo-icon">S</div>
+            <h1>StegoScope</h1>
+            <p class="subtitle">Authentication Required</p>
             {% if error %}<div class="error">{{ error }}</div>{% endif %}
             <form method="post">
-                <input type="password" name="password" placeholder="Enter Passcode" required autofocus><br>
+                <input type="password" name="password" placeholder="Enter Passcode" required autofocus>
                 <button type="submit">Access System</button>
             </form>
         </div>
