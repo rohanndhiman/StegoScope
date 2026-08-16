@@ -44,6 +44,7 @@
     const dropZone       = document.getElementById("drop-zone");
     const fileInput      = document.getElementById("file-input");
     const fileInfo       = document.getElementById("file-info");
+    const fileTypeIcon   = document.getElementById("file-type-icon");
     const fileNameDisplay = document.getElementById("file-name-display");
     const fileSizeDisplay = document.getElementById("file-size-display");
     const btnRemoveFile  = document.getElementById("btn-remove-file");
@@ -978,7 +979,7 @@
         }
 
         selectedFile = file;
-        fileTypeIcon.textContent = getFileIcon(file.name);
+        if (fileTypeIcon) fileTypeIcon.textContent = getFileIcon(file.name);
         fileNameDisplay.textContent = file.name;
         fileSizeDisplay.textContent = formatSize(file.size);
         fileInfo.classList.add("visible");
