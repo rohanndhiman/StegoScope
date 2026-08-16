@@ -8,46 +8,47 @@
    Design tokens
    ----------------------------------------------------------------------- */
 :root {
-    /* Base palette (Dracula default) */
-    --bg-primary:    #0d1117;
-    --bg-secondary:  #161b22;
-    --bg-tertiary:   #21262d;
-    --bg-card:       rgba(22, 27, 34, 0.85);
-    --bg-glass:      rgba(22, 27, 34, 0.65);
+    /* Theme 1: Obsidian Violet (Default / Minimal) */
+    --bg-primary:        #090d16;
+    --bg-secondary:      #111827;
+    --bg-tertiary:       #1f293d;
+    --bg-card:           rgba(17, 24, 39, 0.75);
+    --bg-glass:          rgba(17, 24, 39, 0.65);
+    --grid-color:        rgba(124, 58, 237, 0.05);
     
     /* Text */
-    --text-primary:   #e6edf3;
-    --text-secondary: #8b949e;
-    --text-muted:     #6e7681;
+    --text-primary:      #f3f4f6;
+    --text-secondary:    #9ca3af;
+    --text-muted:        #6b7280;
     
     /* Borders */
-    --border-default: #30363d;
-    --border-subtle:  #21262d;
+    --border-default:    rgba(124, 58, 237, 0.25);
+    --border-subtle:     rgba(255, 255, 255, 0.08);
     
     /* Severity colors */
-    --color-low:       #3fb950;
-    --color-low-bg:    rgba(63, 185, 80, 0.12);
-    --color-moderate:  #d29922;
-    --color-moderate-bg: rgba(210, 153, 34, 0.12);
-    --color-high:      #f85149;
-    --color-high-bg:   rgba(248, 81, 73, 0.12);
+    --color-low:          #10b981;
+    --color-low-bg:       rgba(16, 185, 129, 0.15);
+    --color-moderate:     #f59e0b;
+    --color-moderate-bg:  rgba(245, 158, 11, 0.15);
+    --color-high:         #ef4444;
+    --color-high-bg:      rgba(239, 68, 68, 0.15);
     
     /* Accents */
-    --accent-blue:    #58a6ff;
-    --accent-purple:  #bc8cff;
-    --accent-cyan:    #39d353;
-    --accent-color:   #bc8cff;
-    --glow-color:     rgba(188, 140, 255, 0.15);
+    --accent-blue:       #6366f1;
+    --accent-purple:     #a855f7;
+    --accent-cyan:       #06b6d4;
+    --accent-color:      #a855f7;
+    --glow-color:        rgba(168, 85, 247, 0.25);
     
     /* Effects */
-    --shadow-lg:   0 16px 48px rgba(0, 0, 0, 0.4);
-    --shadow-md:   0 8px 24px rgba(0, 0, 0, 0.3);
-    --shadow-sm:   0 2px 8px rgba(0, 0, 0, 0.2);
+    --shadow-lg:   0 16px 48px rgba(0, 0, 0, 0.6);
+    --shadow-md:   0 8px 24px rgba(0, 0, 0, 0.4);
+    --shadow-sm:   0 2px 8px rgba(0, 0, 0, 0.3);
     --blur-glass:  blur(16px);
     
     /* Spacing */
     --radius-sm:  6px;
-    --radius-md:  10px;
+    --radius-md:  12px;
     --radius-lg:  16px;
     --radius-xl:  24px;
     
@@ -58,130 +59,90 @@
 }
 
 /* -----------------------------------------------------------------------
-   Light Mode Overrides
-   ----------------------------------------------------------------------- */
-body.light-mode {
-    --bg-primary:    #ffffff;
-    --bg-secondary:  #f6f8fa;
-    --bg-tertiary:   #eaeef2;
-    --bg-card:       rgba(255, 255, 255, 0.85);
-    --bg-glass:      rgba(246, 248, 250, 0.8);
-    --text-primary:   #1f2328;
-    --text-secondary: #656d76;
-    --text-muted:     #8c959f;
-    --border-default: #d0d7de;
-    --border-subtle:  #e1e4e8;
-    --accent-blue:    #0969da;
-    --accent-purple:  #8250df;
-    --accent-cyan:    #1a7f37;
-    --accent-color:   #0969da;
-    --glow-color:     rgba(9, 105, 218, 0.15);
-}
-
-/* -----------------------------------------------------------------------
-   Structural Themes — Dramatic visual overhauls
+   Full Theme Ecosystems (Color, Ambient Glows, Cards)
    ----------------------------------------------------------------------- */
 
-/* 1. Minimal — Sharp, flat, brutalist */
-body.theme-minimal .mode-card,
-body.theme-minimal .result-card,
-body.theme-minimal .upload-area,
-body.theme-minimal .drop-zone,
-body.theme-minimal .technique-card,
-body.theme-minimal .app-header,
-body.theme-minimal .settings-panel,
-body.theme-minimal .file-info,
-body.theme-minimal .ctf-panel,
-body.theme-minimal .history-trigger-btn,
-body.theme-minimal .settings-toggle-btn {
-    border-radius: 0 !important;
-    backdrop-filter: none !important;
-    box-shadow: none !important;
-    border: 1px solid var(--border-default) !important;
-}
-body.theme-minimal .mode-card { background: var(--bg-primary); }
-body.theme-minimal .mode-btn, body.theme-minimal .back-btn { border-radius: 0; }
-body.theme-minimal body::before, body.theme-minimal::before { display: none; }
-body.theme-minimal .app-logo-icon { border-radius: 0; }
-body.theme-minimal .score-gauge { border-radius: 0; }
-
-/* 2. Glass — Frosted glass, heavy blur, super rounded */
-body.theme-glass .mode-card,
-body.theme-glass .result-card,
-body.theme-glass .upload-area,
-body.theme-glass .drop-zone,
-body.theme-glass .technique-card,
-body.theme-glass .file-info,
-body.theme-glass .ctf-panel {
-    border-radius: 24px !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25) !important;
-    background: var(--bg-glass) !important;
-    backdrop-filter: blur(24px) !important;
-    -webkit-backdrop-filter: blur(24px) !important;
-}
-body.theme-glass .mode-btn { border-radius: 50px; }
-body.theme-glass .app-logo-icon { border-radius: 16px; }
-body.theme-glass.light-mode .mode-card,
-body.theme-glass.light-mode .result-card,
-body.theme-glass.light-mode .upload-area,
-body.theme-glass.light-mode .technique-card {
-    border: 1px solid rgba(0, 0, 0, 0.08) !important;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08) !important;
+/* 1. Theme: Minimal (Obsidian Violet) */
+body.theme-minimal {
+    --bg-primary:        #090d16;
+    --bg-secondary:      #111827;
+    --bg-tertiary:       #1f293d;
+    --bg-card:           rgba(17, 24, 39, 0.85);
+    --bg-glass:          rgba(17, 24, 39, 0.7);
+    --border-default:    rgba(124, 58, 237, 0.3);
+    --accent-color:      #a855f7;
+    --accent-blue:       #6366f1;
+    --glow-color:        rgba(168, 85, 247, 0.25);
+    --grid-color:        rgba(124, 58, 237, 0.06);
 }
 
-/* 3. Cyber — Neon brutalism, offset shadows, glitch aesthetic */
-body.theme-cyber .mode-card,
-body.theme-cyber .result-card,
-body.theme-cyber .upload-area,
-body.theme-cyber .drop-zone,
-body.theme-cyber .technique-card,
-body.theme-cyber .file-info,
-body.theme-cyber .ctf-panel {
-    border-radius: 0 !important;
-    border: 2px solid var(--accent-blue) !important;
-    box-shadow: 5px 5px 0px var(--accent-blue), -2px -2px 0px var(--accent-purple) !important;
-    background: var(--bg-secondary) !important;
-    backdrop-filter: none !important;
+/* 2. Theme: Glass (Emerald Cyber) */
+body.theme-glass {
+    --bg-primary:        #041310;
+    --bg-secondary:      #0a221c;
+    --bg-tertiary:       #12362d;
+    --bg-card:           rgba(10, 34, 28, 0.75);
+    --bg-glass:          rgba(10, 34, 28, 0.65);
+    --text-primary:      #ecfdf5;
+    --text-secondary:    #6ee7b7;
+    --border-default:    rgba(16, 185, 129, 0.3);
+    --border-subtle:     rgba(16, 185, 129, 0.15);
+    --accent-color:      #10b981;
+    --accent-blue:       #14b8a6;
+    --accent-purple:     #34d399;
+    --glow-color:        rgba(16, 185, 129, 0.3);
+    --grid-color:        rgba(16, 185, 129, 0.08);
 }
-body.theme-cyber .mode-btn {
-    border-radius: 0;
-    border: 2px solid var(--accent-blue);
-    box-shadow: 3px 3px 0 var(--accent-blue);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-}
-body.theme-cyber .mode-btn:hover {
-    box-shadow: 5px 5px 0 var(--accent-purple);
-    transform: translate(-2px, -2px);
-}
-body.theme-cyber .app-logo-icon {
-    border-radius: 0;
-    box-shadow: 4px 4px 0 var(--accent-blue);
-}
-body.theme-cyber .app-title {
-    text-transform: uppercase;
-    letter-spacing: 0.15em;
-}
-body.theme-cyber .drop-zone { border-style: solid !important; }
-body.theme-cyber .back-btn { border-radius: 0; }
 
-/* 4. Classic — Traditional, understated, solid backgrounds */
-body.theme-classic .mode-card,
-body.theme-classic .result-card,
-body.theme-classic .upload-area,
-body.theme-classic .drop-zone,
-body.theme-classic .technique-card,
-body.theme-classic .file-info,
-body.theme-classic .ctf-panel {
-    border-radius: 8px !important;
-    border: 1px solid var(--border-default) !important;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.12) !important;
-    background: var(--bg-secondary) !important;
-    backdrop-filter: none !important;
+/* 3. Theme: Cyber (Neon Night) */
+body.theme-cyber {
+    --bg-primary:        #050509;
+    --bg-secondary:      #0d0d16;
+    --bg-tertiary:       #181827;
+    --bg-card:           rgba(13, 13, 22, 0.85);
+    --bg-glass:          rgba(13, 13, 22, 0.75);
+    --text-primary:      #ffffff;
+    --text-secondary:    #ff79c6;
+    --border-default:    #ff007f;
+    --border-subtle:     rgba(0, 243, 255, 0.4);
+    --accent-color:      #ff007f;
+    --accent-blue:       #00f3ff;
+    --accent-purple:     #ff007f;
+    --glow-color:        rgba(255, 0, 127, 0.35);
+    --grid-color:        rgba(0, 243, 255, 0.1);
 }
-body.theme-classic .mode-btn { border-radius: 6px; }
-body.theme-classic .app-logo-icon { border-radius: 8px; box-shadow: none; }
+
+/* 4. Theme: Classic (Sunset Gold & Bronze) */
+body.theme-classic {
+    --bg-primary:        #120c07;
+    --bg-secondary:      #1c130b;
+    --bg-tertiary:       #2e1f12;
+    --bg-card:           rgba(28, 19, 11, 0.85);
+    --bg-glass:          rgba(28, 19, 11, 0.75);
+    --text-primary:      #fff7ed;
+    --text-secondary:    #fdba74;
+    --border-default:    rgba(245, 158, 11, 0.35);
+    --border-subtle:     rgba(249, 115, 22, 0.2);
+    --accent-color:      #f59e0b;
+    --accent-blue:       #f97316;
+    --accent-purple:     #eab308;
+    --glow-color:        rgba(245, 158, 11, 0.3);
+    --grid-color:        rgba(245, 158, 11, 0.07);
+}
+
+/* Dynamic background grid updating based on theme variable */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image:
+        linear-gradient(var(--grid-color) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+    background-size: 50px 50px;
+    pointer-events: none;
+    z-index: 0;
+    transition: background-image 0.5s ease;
+}
 
 /* -----------------------------------------------------------------------
    Settings Dropdown UI
@@ -382,20 +343,7 @@ body {
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-}
-
-/* Subtle animated background grid */
-body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-image:
-        linear-gradient(var(--border-subtle) 1px, transparent 1px),
-        linear-gradient(90deg, var(--border-subtle) 1px, transparent 1px);
-    background-size: 60px 60px;
-    opacity: 0.3;
-    pointer-events: none;
-    z-index: 0;
+    transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 /* -----------------------------------------------------------------------
