@@ -8,6 +8,7 @@
     <a href="https://github.com/rohanndhiman/StegoScope/issues"><img src="https://img.shields.io/github/issues/rohanndhiman/StegoScope?style=for-the-badge&color=ff0000" alt="Issues Badge"/></a>
     <img src="https://img.shields.io/badge/Python-3.12-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python Badge">
     <img src="https://img.shields.io/badge/Flask-Web_App-black?style=for-the-badge&logo=flask&logoColor=white" alt="Flask Badge">
+    <a href="https://stegoscope.vercel.app/"><img src="https://img.shields.io/badge/Live_Demo-Vercel-black?style=for-the-badge&logo=vercel&logoColor=white" alt="Live on Vercel"></a>
   </p>
 </div>
 
@@ -77,6 +78,20 @@ python generate_samples.py
 python app.py
 ```
 Visit `http://localhost:5000` in your browser.
+
+---
+
+## ☁️ Deploying to Vercel
+
+StegoScope is architected to be 100% compatible with Vercel's Serverless Functions out of the box!
+
+1. Log in to [Vercel](https://vercel.com/) with your GitHub account.
+2. Click **Add New...** → **Project**.
+3. Import your cloned `StegoScope` repository.
+4. Leave the Framework Preset as **Other**.
+5. Click **Deploy**.
+
+Vercel will automatically read the `vercel.json` file and map the Flask application via `@vercel/python`.
 
 ---
 
