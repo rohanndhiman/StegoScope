@@ -1104,6 +1104,8 @@
             }
 
             renderResults(data);
+            addScanToHistory(data.filename, data.file_type, data.overall_score, data.overall_label, data);
+            showScreen("results");
 
         } catch (err) {
             showError("Network error: could not reach the server. Is it running?");
