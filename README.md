@@ -8,7 +8,7 @@
     <a href="https://github.com/rohanndhiman/StegoScope/issues"><img src="https://img.shields.io/github/issues/rohanndhiman/StegoScope?style=for-the-badge&color=ff0000" alt="Issues Badge"/></a>
     <img src="https://img.shields.io/badge/Python-3.12-blue?style=for-the-badge&logo=python&logoColor=white" alt="Python Badge">
     <img src="https://img.shields.io/badge/Flask-Web_App-black?style=for-the-badge&logo=flask&logoColor=white" alt="Flask Badge">
-    <a href="https://stegoscope.vercel.app/"><img src="https://img.shields.io/badge/Live_Demo-Vercel-black?style=for-the-badge&logo=vercel&logoColor=white" alt="Live on Vercel"></a>
+    <a href="https://stego-scope-roan.vercel.app/"><img src="https://img.shields.io/badge/Live_Demo-Vercel-black?style=for-the-badge&logo=vercel&logoColor=white" alt="Live on Vercel"></a>
   </p>
 </div>
 
