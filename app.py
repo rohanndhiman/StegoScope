@@ -445,6 +445,35 @@ def analyze():
     if mode == "ctf":
         response["ctf_suggestions"] = suggestions
 
+    # Automatically save to MongoDB history before returning to avoid Vercel 4.5MB payload limits on frontend POSTs
+    if db_client:
+        try:
+            history_record = {
+                "filename": uploaded.filename,
+                "category": category,
+                "score": overall_score,
+                "label": overall_label,
+                "timestamp": datetime.datetime.utcnow(),
+                "data": dict(response) # copy
+            }
+            original_file_b64 = history_record["data"].get("original_file")
+            if original_file_b64 and len(original_file_b64) > 1000:
+                if ',' in original_file_b64:
+                    _, b64_data = original_file_b64.split(',', 1)
+                else:
+                    b64_data = original_file_b64
+                file_bytes_b64 = base64.b64decode(b64_data)
+                file_id = fs.put(file_bytes_b64, filename=uploaded.filename)
+                history_record["gridfs_id"] = str(file_id)
+                del history_record["data"]["original_file"]
+
+            result = db.scan_history.insert_one(history_record)
+            response["_db_id"] = str(result.inserted_id)
+            if "gridfs_id" in history_record:
+                response["_gridfs_id"] = history_record["gridfs_id"]
+        except Exception as e:
+            logging.error(f"Failed to auto-save to history: {e}")
+
     return jsonify(response), 200
 
 

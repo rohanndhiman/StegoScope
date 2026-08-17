@@ -203,32 +203,31 @@
     }
 
     async function addScanToHistory(filename, category, overallScore, overallLabel, responseData) {
-        // Optimistic UI update
+        // Backend now handles saving to MongoDB during the /analyze phase to prevent Vercel 4.5MB payload timeouts!
+        // We just update the UI state using the returned DB ID.
+        if (!responseData._db_id) return; // Not saved to DB
+        
         scanHistory = scanHistory.filter(item => item.filename !== filename);
+        
+        // Strip the massive original_file base64 payload from memory if GridFS was used
+        if (responseData._gridfs_id && responseData.original_file) {
+            delete responseData.original_file;
+        }
+
         const newItem = {
+            _id: responseData._db_id,
+            gridfs_id: responseData._gridfs_id || null,
             filename: filename,
             category: category,
             score: overallScore,
             label: overallLabel,
-            timestamp: new Date().toISOString(), // DB format
+            timestamp: new Date().toISOString(),
             data: responseData
         };
         
-        try {
-            const res = await fetch('/api/history', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(newItem)
-            });
-            if (res.ok) {
-                const savedItem = await res.json();
-                scanHistory.unshift(savedItem);
-                if (scanHistory.length > 50) {
-                    scanHistory = scanHistory.slice(0, 50);
-                }
-            }
-        } catch (err) {
-            console.error("Failed to save to history DB:", err);
+        scanHistory.unshift(newItem);
+        if (scanHistory.length > 50) {
+            scanHistory = scanHistory.slice(0, 50);
         }
         
         updateHistoryCount();
