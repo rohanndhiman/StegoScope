@@ -1114,11 +1114,20 @@
         const enginesBody = document.getElementById("vt-engines-body");
         enginesBody.innerHTML = "";
         
-        // VT is double-column. We group rows in pairs of two.
         const sorted = [...techniques].sort((a, b) => b.score - a.score);
         const detected = sorted.filter(t => t.score > 35).length;
         document.getElementById("vt-engines-count").textContent =
-            `${detected} of ${sorted.length} engines flagged`;
+            `${detected} of ${sorted.length} vendors flagged`;
+
+        // Professional Malware Scan naming mapping
+        const nameMap = {
+            "Binwalk Scan": "Embedded File Signatures",
+            "Metadata Analysis": "EXIF Header Anomalies",
+            "Strings Scan": "IOC Signature Engine",
+            "Error Level Analysis": "Compression Heatmap Audit",
+            "EOF Trailer Analysis": "Appended Payload Scanner",
+            "Spectrogram Analysis": "Audio Frequency Inconsistency"
+        };
 
         for (let i = 0; i < sorted.length; i += 2) {
             const tr = document.createElement("tr");
@@ -1126,6 +1135,7 @@
 
             // Left Column
             const techL = sorted[i];
+            const nameL = nameMap[techL.name] || techL.name;
             const sevL = getSeverity(techL.score);
             const tdNameL = document.createElement("td");
             tdNameL.className = "vt-engine-name";
@@ -1134,10 +1144,11 @@
             iconL.textContent = sevL.cls === "high" ? "✕" : "✓";
             tdNameL.appendChild(iconL);
             const nameTextL = document.createElement("span");
-            nameTextL.textContent = techL.name;
+            nameTextL.textContent = nameL;
             tdNameL.appendChild(nameTextL);
 
             const tdResultL = document.createElement("td");
+            tdResultL.className = "vt-engine-result-col";
             const badgeL = document.createElement("span");
             badgeL.className = "vt-result-badge " + sevL.cls;
             badgeL.textContent = sevL.cls === "high" ? "Detected" : "Undetected";
@@ -1149,6 +1160,7 @@
             // Right Column (if exists)
             if (i + 1 < sorted.length) {
                 const techR = sorted[i + 1];
+                const nameR = nameMap[techR.name] || techR.name;
                 const sevR = getSeverity(techR.score);
                 const tdNameR = document.createElement("td");
                 tdNameR.className = "vt-engine-name";
@@ -1157,10 +1169,11 @@
                 iconR.textContent = sevR.cls === "high" ? "✕" : "✓";
                 tdNameR.appendChild(iconR);
                 const nameTextR = document.createElement("span");
-                nameTextR.textContent = techR.name;
+                nameTextR.textContent = nameR;
                 tdNameR.appendChild(nameTextR);
 
                 const tdResultR = document.createElement("td");
+                tdResultR.className = "vt-engine-result-col";
                 const badgeR = document.createElement("span");
                 badgeR.className = "vt-result-badge " + sevR.cls;
                 badgeR.textContent = sevR.cls === "high" ? "Detected" : "Undetected";
@@ -1170,8 +1183,12 @@
                 tr.appendChild(tdResultR);
             } else {
                 // Empty placeholders
-                tr.appendChild(document.createElement("td"));
-                tr.appendChild(document.createElement("td"));
+                const tdEmptyName = document.createElement("td");
+                tdEmptyName.className = "vt-engine-name";
+                const tdEmptyRes = document.createElement("td");
+                tdEmptyRes.className = "vt-engine-result-col";
+                tr.appendChild(tdEmptyName);
+                tr.appendChild(tdEmptyRes);
             }
 
             enginesBody.appendChild(tr);

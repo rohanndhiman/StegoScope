@@ -2514,26 +2514,18 @@ body {
     overflow: hidden;
 }
 
-.vt-engines-table thead th {
-    background: var(--bg-secondary);
-    color: var(--text-secondary);
-    font-size: 0.72rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    padding: 0.7rem 1.25rem;
-    text-align: left;
-    border-bottom: 1px solid var(--border-default);
-}
-
-.vt-engines-table thead th:nth-child(2) {
-    border-right: 1px solid var(--border-subtle);
-}
-
 .vt-engines-table td {
     padding: 0.85rem 1.25rem;
     border-bottom: 1px solid var(--border-subtle);
     font-size: 0.85rem;
+}
+
+.vt-engines-table td.vt-engine-name {
+    width: 35%;
+}
+
+.vt-engines-table td.vt-engine-result-col {
+    width: 15%;
 }
 
 .vt-engines-table tr td:nth-child(2) {
