@@ -423,13 +423,18 @@ body {
     height: 100%;
 }
 
-/* Default Dark theme: Hide light logo, show dark logo */
+/* Default Dark theme: Hide light logo, show dark logo, color target lines white */
 .logo-svg.light-logo {
     display: none;
 }
 
 .logo-svg.dark-logo {
     display: block;
+}
+
+.logo-svg.dark-logo circle,
+.logo-svg.dark-logo line {
+    stroke: var(--text-primary) !important;
 }
 
 /* Light theme overrides: Hide dark logo, show light logo */
