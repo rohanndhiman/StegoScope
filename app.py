@@ -94,7 +94,7 @@ def login():
                 max-width: 90vw;
             }
             .logo-icon {
-                width: 56px; height: 56px;
+                width: 68px; height: 68px;
                 background: #18181b;
                 border: 1px solid #27272a;
                 color: #f7f8f8;
