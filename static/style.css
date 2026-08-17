@@ -32,16 +32,16 @@
     --color-high-bg:      rgba(248, 113, 113, 0.08);
     
     /* Simple, clean colors (no bright blues/purples) */
-    --accent-blue:       #f7f8f8;
+    --accent-blue:       #1C63E7;
     --accent-purple:     #70737d;
     --accent-cyan:       #b4bcd0;
-    --accent-color:      #f7f8f8;
-    --glow-color:        rgba(255, 255, 255, 0.05);
+    --accent-color:      #1C63E7;
+    --glow-color:        rgba(28, 99, 231, 0.15);
     
     /* Effects */
     --shadow-lg:   0 20px 40px rgba(0, 0, 0, 0.85);
-    --shadow-md:   0 8px 24px rgba(0, 0, 0, 0.6);
-    --shadow-sm:   0 2px 8px rgba(0, 0, 0, 0.4);
+    --shadow-md:   0 8px 24px rgba(28, 99, 231, 0.12);
+    --shadow-sm:   0 2px 8px rgba(28, 99, 231, 0.08);
     --blur-glass:  none; /* Hairline flat look is more Linear */
     
     /* Spacing */
@@ -68,9 +68,9 @@ body.theme-classic {
     --bg-card:           #0f0f12;
     --bg-glass:          #08080a;
     --border-default:    #1e1e24;
-    --accent-color:      #f7f8f8;
-    --accent-blue:       #f7f8f8;
-    --glow-color:        rgba(255, 255, 255, 0.05);
+    --accent-color:      #1C63E7;
+    --accent-blue:       #1C63E7;
+    --glow-color:        rgba(28, 99, 231, 0.15);
     --grid-color:        rgba(255, 255, 255, 0.01);
 }
 
@@ -486,7 +486,7 @@ body {
 .mode-card:hover {
     border-color: var(--accent-blue);
     transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 8px 30px rgba(28, 99, 231, 0.15);
 }
 
 .mode-icon {
@@ -724,8 +724,8 @@ body {
     position: absolute;
     width: 20px;
     height: 20px;
-    border: 2px solid rgba(255,255,255,0.3);
-    border-top-color: #fff;
+    border: 2px solid rgba(28, 99, 231, 0.3);
+    border-top-color: #1C63E7;
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
 }

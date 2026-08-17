@@ -125,7 +125,7 @@ def login():
                 transition: border-color 0.2s;
                 outline: none;
             }
-            input[type="password"]:focus { border-color: #70737d; }
+            input[type="password"]:focus { border-color: #1C63E7; }
             button {
                 padding: 12px 24px;
                 width: 100%;
@@ -137,10 +137,14 @@ def login():
                 font-weight: 600;
                 font-size: 0.95rem;
                 font-family: inherit;
-                transition: background-color 0.2s;
+                transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
             }
-            button:hover { background-color: #27272a; }
-            button:active { background-color: #1e1e24; }
+            button:hover {
+                background-color: #1C63E7;
+                border-color: #1C63E7;
+                box-shadow: 0 4px 12px rgba(28, 99, 231, 0.2);
+            }
+            button:active { background-color: #164eb3; }
             .error {
                 color: #f87171;
                 background: rgba(248, 113, 113, 0.08);
