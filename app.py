@@ -59,12 +59,12 @@ def login():
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Login - StegoScope</title>
         <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
         <style>
             * { margin: 0; padding: 0; box-sizing: border-box; }
             body {
-                background-color: #0d1117;
-                color: #e6edf3;
+                background-color: #000103;
+                color: #f7f8f8;
                 font-family: 'Inter', system-ui, sans-serif;
                 display: flex;
                 align-items: center;
@@ -77,85 +77,84 @@ def login():
                 position: fixed;
                 top: 0; left: 0; right: 0; bottom: 0;
                 background-image:
-                    linear-gradient(#21262d 1px, transparent 1px),
-                    linear-gradient(90deg, #21262d 1px, transparent 1px);
-                background-size: 60px 60px;
-                opacity: 0.3;
+                    linear-gradient(rgba(255, 255, 255, 0.01) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255, 255, 255, 0.01) 1px, transparent 1px);
+                background-size: 50px 50px;
                 pointer-events: none;
             }
             .login-box {
                 position: relative;
-                background: rgba(22, 27, 34, 0.85);
-                backdrop-filter: blur(16px);
+                background: #0f0f12;
                 padding: 3rem 2.5rem;
-                border-radius: 16px;
-                border: 1px solid #30363d;
+                border-radius: 8px;
+                border: 1px solid #1e1e24;
                 text-align: center;
-                box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+                box-shadow: 0 20px 40px rgba(0, 0, 0, 0.85);
                 width: 380px;
                 max-width: 90vw;
             }
             .logo-icon {
                 width: 56px; height: 56px;
-                background: linear-gradient(135deg, #58a6ff, #bc8cff);
-                border-radius: 12px;
+                background: #18181b;
+                border: 1px solid #27272a;
+                color: #f7f8f8;
+                font-weight: 700;
+                border-radius: 6px;
                 display: flex; align-items: center; justify-content: center;
-                margin: 0 auto 1rem;
-                font-size: 1.8rem;
-                box-shadow: 0 0 24px rgba(88, 166, 255, 0.3);
+                margin: 0 auto 1.5rem;
+                font-size: 1.3rem;
             }
             h1 {
-                font-size: 1.8rem;
+                font-size: 1.6rem;
                 font-weight: 700;
-                background: linear-gradient(135deg, #58a6ff, #bc8cff);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
+                color: #f7f8f8;
                 margin-bottom: 0.25rem;
+                letter-spacing: -0.02em;
             }
-            .subtitle { color: #8b949e; font-size: 0.9rem; margin-bottom: 2rem; }
+            .subtitle { color: #70737d; font-size: 0.85rem; margin-bottom: 2rem; }
             input[type="password"] {
                 padding: 12px 16px;
                 width: 100%;
-                border: 1px solid #30363d;
-                border-radius: 10px;
-                background: #0d1117;
-                color: #e6edf3;
-                font-size: 1rem;
+                border: 1px solid #1e1e24;
+                border-radius: 6px;
+                background: #08080a;
+                color: #f7f8f8;
+                font-size: 0.95rem;
                 font-family: inherit;
                 margin-bottom: 1rem;
                 transition: border-color 0.2s;
                 outline: none;
             }
-            input[type="password"]:focus { border-color: #58a6ff; }
+            input[type="password"]:focus { border-color: #70737d; }
             button {
                 padding: 12px 24px;
                 width: 100%;
-                background: linear-gradient(135deg, #58a6ff, #bc8cff);
-                color: #0d1117;
-                border: none;
-                border-radius: 10px;
+                background: #18181b;
+                color: #f7f8f8;
+                border: 1px solid #27272a;
+                border-radius: 6px;
                 cursor: pointer;
-                font-weight: 700;
-                font-size: 1rem;
+                font-weight: 600;
+                font-size: 0.95rem;
                 font-family: inherit;
-                transition: opacity 0.2s, transform 0.1s;
+                transition: background-color 0.2s;
             }
-            button:hover { opacity: 0.9; }
-            button:active { transform: scale(0.98); }
+            button:hover { background-color: #27272a; }
+            button:active { background-color: #1e1e24; }
             .error {
-                color: #f85149;
-                background: rgba(248, 81, 73, 0.1);
+                color: #f87171;
+                background: rgba(248, 113, 113, 0.08);
+                border: 1px solid rgba(248, 113, 113, 0.2);
                 padding: 8px 12px;
-                border-radius: 8px;
+                border-radius: 6px;
                 margin-bottom: 1rem;
-                font-size: 0.9rem;
+                font-size: 0.85rem;
             }
         </style>
     </head>
     <body>
         <div class="login-box">
-            <div class="logo-icon">S</div>
+            <div class="logo-icon">SS</div>
             <h1>StegoScope</h1>
             <p class="subtitle">Authentication Required</p>
             {% if error %}<div class="error">{{ error }}</div>{% endif %}
