@@ -129,6 +129,10 @@ def analyze(file_bytes: bytes, file_type: str) -> dict:
     
     try:
         original = Image.open(io.BytesIO(file_bytes)).convert("RGB")
+        # Resize massively large images to avoid Vercel timeouts (max 1200px)
+        max_dim = 1200
+        if original.width > max_dim or original.height > max_dim:
+            original.thumbnail((max_dim, max_dim), Image.Resampling.LANCZOS)
     except Exception as e:
         return {
             "name": "Error Level Analysis",

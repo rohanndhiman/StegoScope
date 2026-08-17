@@ -17,22 +17,10 @@ def analyze(file_bytes: bytes, file_type: str) -> dict:
     Returns:
         Dict with name, score, explanation, list of strings, and details.
     """
-    # Standard Linux strings behavior: printable characters are 32 to 126
-    # Extract contiguous sequences of length >= 4
-    string_list = []
-    current_str = []
-    
-    for b in file_bytes:
-        if 32 <= b <= 126:
-            current_str.append(chr(b))
-        else:
-            if len(current_str) >= 4:
-                string_list.append("".join(current_str))
-            current_str = []
-            
-    # Add any final string remaining at EOF
-    if len(current_str) >= 4:
-        string_list.append("".join(current_str))
+    # Fast C-based regex extraction of printable ASCII sequences >= 4 chars
+    ascii_regex = re.compile(b'[ -~]{4,}')
+    matches = ascii_regex.findall(file_bytes)
+    string_list = [m.decode('ascii') for m in matches]
 
     # Scan for flags
     flags_found = []
