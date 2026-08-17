@@ -423,27 +423,16 @@ body {
     height: 100%;
 }
 
-/* Default Dark theme: Hide light logo, show dark logo, color target lines white */
-.logo-svg.light-logo {
-    display: none;
-}
-
-.logo-svg.dark-logo {
-    display: block;
-}
-
-.logo-svg.dark-logo circle,
-.logo-svg.dark-logo line {
+/* Default Dark theme: Color target lines white */
+.logo-svg.forensic-logo circle,
+.logo-svg.forensic-logo line {
     stroke: var(--text-primary) !important;
 }
 
-/* Light theme overrides: Hide dark logo, show light logo */
-body.light-mode .logo-svg.dark-logo {
-    display: none;
-}
-
-body.light-mode .logo-svg.light-logo {
-    display: block;
+/* Light theme overrides: Color target lines black */
+body.light-mode .logo-svg.forensic-logo circle,
+body.light-mode .logo-svg.forensic-logo line {
+    stroke: #000000 !important;
 }
 
 .app-title-group {
