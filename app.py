@@ -20,7 +20,11 @@ from detectors.binwalk import analyze as binwalk_analyze
 from detectors.strings import analyze as strings_analyze
 
 from ctf_helper import get_ctf_suggestions
-
+import pymongo
+import gridfs
+from bson import ObjectId
+import datetime
+import logging
 
 # ---------------------------------------------------------------------------
 # App configuration
@@ -29,6 +33,22 @@ app = Flask(__name__, static_folder="static", static_url_path="/static")
 app.config["MAX_CONTENT_LENGTH"] = 20 * 1024 * 1024  # 20 MB upload limit
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "super_secret_stegoscope_key")
 APP_PASSWORD = os.environ.get("APP_PASSWORD", "stego123")
+
+# MongoDB Configuration
+MONGO_URI = os.environ.get("MONGO_URI")
+db_client = None
+db = None
+fs = None
+
+if MONGO_URI:
+    try:
+        db_client = pymongo.MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+        db = db_client.get_default_database("stegoscope_db")
+        fs = gridfs.GridFS(db)
+        logging.info("MongoDB connected successfully.")
+    except Exception as e:
+        logging.error(f"Failed to connect to MongoDB: {e}")
+        db_client = None
 
 @app.before_request
 def check_auth():
@@ -427,6 +447,120 @@ def analyze():
 
     return jsonify(response), 200
 
+
+
+# ---------------------------------------------------------------------------
+# MongoDB History Endpoints
+# ---------------------------------------------------------------------------
+
+@app.route('/api/history', methods=['GET'])
+def get_history():
+    if not db_client:
+        return jsonify({"error": "MongoDB not configured"}), 500
+    
+    # Retrieve history, sorting by timestamp descending
+    try:
+        cursor = db.scan_history.find().sort("timestamp", -1).limit(50)
+        results = []
+        for doc in cursor:
+            doc['_id'] = str(doc['_id'])
+            # Do not return the full file data in list view, just ID if it exists
+            if 'gridfs_id' in doc and doc['gridfs_id']:
+                doc['gridfs_id'] = str(doc['gridfs_id'])
+            results.append(doc)
+        return jsonify(results)
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/history', methods=['POST'])
+def save_history():
+    if not db_client:
+        return jsonify({"error": "MongoDB not configured"}), 500
+    
+    data = request.json
+    if not data:
+        return jsonify({"error": "No data provided"}), 400
+        
+    try:
+        # Check if there's a large payload in 'original_file' to store in GridFS
+        original_file_b64 = data.get('original_file')
+        if original_file_b64 and len(original_file_b64) > 1000:
+            import base64
+            # Strip data:image/...;base64, prefix if present
+            if ',' in original_file_b64:
+                header, b64_data = original_file_b64.split(',', 1)
+            else:
+                b64_data = original_file_b64
+                
+            file_bytes = base64.b64decode(b64_data)
+            file_id = fs.put(file_bytes, filename=data.get('filename', 'scan_image'))
+            data['gridfs_id'] = str(file_id)
+            del data['original_file'] # Remove from document to save space
+            
+        data['timestamp'] = datetime.datetime.utcnow()
+        result = db.scan_history.insert_one(data)
+        data['_id'] = str(result.inserted_id)
+        
+        return jsonify(data)
+    except Exception as e:
+        logging.error(f"Error saving to history: {e}")
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/history/<history_id>', methods=['DELETE'])
+def delete_history_item(history_id):
+    if not db_client:
+        return jsonify({"error": "MongoDB not configured"}), 500
+        
+    try:
+        # Find item to check for gridfs
+        item = db.scan_history.find_one({"_id": ObjectId(history_id)})
+        if item and 'gridfs_id' in item:
+            fs.delete(ObjectId(item['gridfs_id']))
+            
+        db.scan_history.delete_one({"_id": ObjectId(history_id)})
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/history', methods=['DELETE'])
+def clear_history():
+    if not db_client:
+        return jsonify({"error": "MongoDB not configured"}), 500
+        
+    try:
+        # Delete all gridfs files associated with history
+        cursor = db.scan_history.find({"gridfs_id": {"$exists": True}})
+        for item in cursor:
+            fs.delete(ObjectId(item['gridfs_id']))
+            
+        db.scan_history.delete_many({})
+        return jsonify({"success": True})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/api/history/download/<file_id>', methods=['GET'])
+def download_gridfs_file(file_id):
+    if not db_client:
+        return jsonify({"error": "MongoDB not configured"}), 500
+        
+    try:
+        grid_out = fs.get(ObjectId(file_id))
+        from flask import Response
+        # Attempt to determine mimetype
+        # Since we stripped the data header, we'll serve it as image/png generically or determine from filename
+        mimetype = "image/png"
+        if grid_out.filename.lower().endswith(".jpg") or grid_out.filename.lower().endswith(".jpeg"):
+            mimetype = "image/jpeg"
+        elif grid_out.filename.lower().endswith(".wav"):
+            mimetype = "audio/wav"
+        elif grid_out.filename.lower().endswith(".mp3"):
+            mimetype = "audio/mpeg"
+            
+        return Response(grid_out.read(), mimetype=mimetype)
+    except gridfs.errors.NoFile:
+        return jsonify({"error": "File not found"}), 404
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 
 # ---------------------------------------------------------------------------

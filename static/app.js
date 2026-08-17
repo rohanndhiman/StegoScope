@@ -174,26 +174,27 @@
     }
 
     // -----------------------------------------------------------------------
-    // Scan History System
+    // Scan History System (MongoDB API)
     // -----------------------------------------------------------------------
     let scanHistory = [];
 
-    function loadHistory() {
+    async function loadHistory() {
         try {
-            const stored = localStorage.getItem("stegoscope-scan-history");
-            scanHistory = stored ? JSON.parse(stored) : [];
+            const response = await fetch('/api/history');
+            if (response.ok) {
+                scanHistory = await response.json();
+            } else {
+                scanHistory = [];
+            }
         } catch (err) {
+            console.error("Failed to load history from MongoDB:", err);
             scanHistory = [];
         }
         updateHistoryCount();
     }
 
-    function saveHistory() {
-        try {
-            localStorage.setItem("stegoscope-scan-history", JSON.stringify(scanHistory));
-        } catch (err) {
-            // ignore
-        }
+    async function saveHistory() {
+        // Obsolete function, kept for compatibility if called elsewhere but we will now POST individually.
         updateHistoryCount();
     }
 
@@ -201,28 +202,47 @@
         if (historyCount) historyCount.textContent = scanHistory.length;
     }
 
-    function addScanToHistory(filename, category, overallScore, overallLabel, responseData) {
+    async function addScanToHistory(filename, category, overallScore, overallLabel, responseData) {
+        // Optimistic UI update
         scanHistory = scanHistory.filter(item => item.filename !== filename);
         const newItem = {
-            id: Date.now(),
             filename: filename,
             category: category,
             score: overallScore,
             label: overallLabel,
-            timestamp: new Date().toLocaleString(),
+            timestamp: new Date().toISOString(), // DB format
             data: responseData
         };
-        scanHistory.unshift(newItem);
-        if (scanHistory.length > 10) {
-            scanHistory = scanHistory.slice(0, 10);
+        
+        try {
+            const res = await fetch('/api/history', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(newItem)
+            });
+            if (res.ok) {
+                const savedItem = await res.json();
+                scanHistory.unshift(savedItem);
+                if (scanHistory.length > 50) {
+                    scanHistory = scanHistory.slice(0, 50);
+                }
+            }
+        } catch (err) {
+            console.error("Failed to save to history DB:", err);
         }
-        saveHistory();
+        
+        updateHistoryCount();
     }
 
-    function deleteHistoryItem(id) {
-        scanHistory = scanHistory.filter(item => item.id !== id);
-        saveHistory();
+    async function deleteHistoryItem(id) {
+        scanHistory = scanHistory.filter(item => item._id !== id);
         renderHistoryList();
+        try {
+            await fetch(`/api/history/${id}`, { method: 'DELETE' });
+        } catch (err) {
+            console.error("Failed to delete item:", err);
+        }
+        updateHistoryCount();
     }
 
     function renderHistoryList() {
@@ -253,7 +273,7 @@
             delBtn.title = "Delete record";
             delBtn.addEventListener("click", (e) => {
                 e.stopPropagation();
-                deleteHistoryItem(item.id);
+                deleteHistoryItem(item._id); // API uses _id from MongoDB
             });
             header.appendChild(delBtn);
             card.appendChild(header);
@@ -263,7 +283,12 @@
             
             const time = document.createElement("span");
             time.className = "history-card-time";
-            time.textContent = item.timestamp;
+            // Format DB timestamp gracefully
+            try {
+                time.textContent = new Date(item.timestamp).toLocaleString();
+            } catch(e) {
+                time.textContent = item.timestamp;
+            }
             meta.appendChild(time);
             
             const badge = document.createElement("span");
@@ -278,6 +303,11 @@
                 selectedFile = new File(["mock"], item.filename, {
                     type: item.category === "image" ? "image/png" : "audio/wav"
                 });
+                
+                // If it has a gridfs_id, we restore the original_file to stream from backend
+                if (item.gridfs_id) {
+                    item.data.original_file = `/api/history/download/${item.gridfs_id}`;
+                }
                 
                 const mode = item.data.ctf_suggestions ? "ctf" : "malware";
                 selectMode(mode);
@@ -305,10 +335,15 @@
     btnCloseHistory.addEventListener("click", closeHistoryDrawer);
     drawerOverlay.addEventListener("click", closeHistoryDrawer);
 
-    btnClearHistory.addEventListener("click", () => {
+    btnClearHistory.addEventListener("click", async () => {
         scanHistory = [];
-        saveHistory();
         renderHistoryList();
+        updateHistoryCount();
+        try {
+            await fetch('/api/history', { method: 'DELETE' });
+        } catch (err) {
+            console.error("Failed to clear history:", err);
+        }
     });
 
     loadHistory();
