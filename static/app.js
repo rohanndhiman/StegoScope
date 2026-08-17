@@ -934,11 +934,11 @@
     function selectMode(mode) {
         currentMode = mode;
         if (mode === "malware") {
-            modeBadgeIcon.textContent = "🛡️";
-            modeBadgeText.textContent = "Malware & File Check";
+            if (modeBadgeIcon) modeBadgeIcon.textContent = "🛡️";
+            if (modeBadgeText) modeBadgeText.textContent = "Malware & File Check";
         } else {
-            modeBadgeIcon.textContent = "🚩";
-            modeBadgeText.textContent = "CTF Analysis & Helper";
+            if (modeBadgeIcon) modeBadgeIcon.textContent = "🚩";
+            if (modeBadgeText) modeBadgeText.textContent = "CTF Analysis & Helper";
         }
         
         // Reset upload UI
@@ -980,12 +980,12 @@
 
         selectedFile = file;
         if (fileTypeIcon) fileTypeIcon.textContent = getFileIcon(file.name);
-        fileNameDisplay.textContent = file.name;
-        fileSizeDisplay.textContent = formatSize(file.size);
-        fileInfo.classList.add("visible");
-        dropZone.classList.add("has-file");
-        btnAnalyze.disabled = false;
-        uploadError.classList.remove("visible");
+        if (fileNameDisplay) fileNameDisplay.textContent = file.name;
+        if (fileSizeDisplay) fileSizeDisplay.textContent = formatSize(file.size);
+        if (fileInfo) fileInfo.classList.add("visible");
+        if (dropZone) dropZone.classList.add("has-file");
+        if (btnAnalyze) btnAnalyze.disabled = false;
+        if (uploadError) uploadError.classList.remove("visible");
     }
 
     dropZone.addEventListener("click", () => fileInput.click());
