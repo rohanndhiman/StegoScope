@@ -17,7 +17,7 @@
         <header class="app-header">
             <div class="header-content">
                 <div class="app-logo">
-                    <div class="app-logo-icon">🔬</div>
+                    <div class="app-logo-icon">SS</div>
                     <div class="app-title-group">
                         <h1 class="app-title">StegoScope</h1>
                         <p class="app-subtitle">Forensic Steganography &amp; Hidden Data Analysis Suite</p>
@@ -85,7 +85,6 @@
                         ← Back
                     </button>
                     <span class="current-mode-badge" id="mode-badge">
-                        <span id="mode-badge-icon">🛡️</span>
                         <span id="mode-badge-text">Malware & File Check</span>
                     </span>
                 </div>
@@ -106,7 +105,6 @@
 
                 <!-- Selected file info -->
                 <div class="file-info" id="file-info">
-                    <div class="file-icon" id="file-type-icon">🖼️</div>
                     <div class="file-details">
                         <div class="file-name" id="file-name-display">—</div>
                         <div class="file-size" id="file-size-display">—</div>
@@ -116,7 +114,7 @@
 
                 <!-- Analyze button -->
                 <button class="analyze-btn" id="btn-analyze" disabled>
-                    <span class="btn-text">🔍 Analyze File</span>
+                    <span class="btn-text">Analyze File</span>
                 </button>
 
                 <!-- Progress bar and terminal console -->
@@ -194,10 +192,10 @@
             <div class="results-tabs" role="tablist">
                 <button class="tab-btn active" id="tab-scores-btn" data-tab="scores" role="tab" aria-selected="true" aria-controls="tab-scores-content">DETECTION</button>
                 <button class="tab-btn" id="tab-details-btn" data-tab="details" role="tab" aria-selected="false" aria-controls="tab-details-content">DETAILS</button>
-                <button class="tab-btn" id="tab-stegsolve-btn" data-tab="stegsolve" role="tab" aria-selected="false" aria-controls="tab-stegsolve-content">🔍 Stegsolve Explorer</button>
+                <button class="tab-btn" id="tab-stegsolve-btn" data-tab="stegsolve" role="tab" aria-selected="false" aria-controls="tab-stegsolve-content">Stegsolve Explorer</button>
                 <button class="tab-btn" id="tab-strings-btn" data-tab="strings" role="tab" aria-selected="false" aria-controls="tab-strings-content">STRINGS</button>
                 <button class="tab-btn" id="tab-binwalk-btn" data-tab="binwalk" role="tab" aria-selected="false" aria-controls="tab-binwalk-content">BEHAVIOR</button>
-                <button class="tab-btn" id="tab-steghide-btn" data-tab="steghide" role="tab" aria-selected="false" aria-controls="tab-steghide-content">🔑 Steghide Decrypt</button>
+                <button class="tab-btn" id="tab-steghide-btn" data-tab="steghide" role="tab" aria-selected="false" aria-controls="tab-steghide-content">Steghide Decrypt</button>
             </div>
 
             <!-- Tab Content 1: Forensic Scores Grid -->
@@ -207,7 +205,7 @@
                 </div>
                 <div class="vt-detection-wrap" id="vt-detection-wrap" style="display: none;">
                     <div class="vt-section-title">
-                        <h3>🔬 Detection Engines</h3>
+                        <h3>Detection Engines</h3>
                         <span class="vt-engines-count" id="vt-engines-count"></span>
                     </div>
                     <table class="vt-engines-table">
@@ -366,7 +364,7 @@
 
             <!-- Recommendations panel (Both modes) -->
             <div class="ctf-panel" id="ctf-panel" style="display: none;">
-                <h2 class="ctf-panel-title" id="ctf-panel-title">🧩 Suggested Next Steps</h2>
+                <h2 class="ctf-panel-title" id="ctf-panel-title">Suggested Next Steps</h2>
                 <div id="ctf-suggestions-list">
                     <!-- Populated by JS -->
                 </div>
@@ -375,14 +373,13 @@
 
             <!-- Disclaimer -->
             <div class="disclaimer" id="disclaimer">
-                <span class="disclaimer-icon">⚠️</span>
                 This score combines multiple independent forensic signals.
                 No single check is conclusive on its own.
             </div>
 
             <!-- Reset -->
             <button class="reset-btn" id="btn-reset">
-                🔄 Check Another File
+                Check Another File
             </button>
         </section>
     </div>
@@ -395,12 +392,12 @@
     <!-- History Drawer Overlay & Container -->
     <div class="history-drawer" id="history-drawer" role="dialog" aria-label="Scan History" aria-hidden="true">
         <div class="drawer-header">
-            <h2 class="drawer-title">📜 Scan History</h2>
+            <h2 class="drawer-title">Scan History</h2>
             <button class="close-drawer-btn" id="btn-close-history" aria-label="Close history">✕</button>
         </div>
         <div class="drawer-body">
             <div class="history-controls">
-                <button class="clear-history-btn" id="btn-clear-history">🗑️ Clear All History</button>
+                <button class="clear-history-btn" id="btn-clear-history">Clear All History</button>
             </div>
             <div class="history-list" id="history-list">
                 <!-- Populated by JS -->

@@ -1364,8 +1364,8 @@
         if (suggestions.length > 0) {
             ctfPanel.style.display = "block";
             ctfPanelTitle.innerHTML = currentMode === "ctf"
-                ? "🧩 Action Plan &amp; CTF Hints"
-                : "🛡️ Forensic Recommendations &amp; Action Plan";
+                ? "Action Plan &amp; CTF Hints"
+                : "Forensic Recommendations &amp; Action Plan";
             ctfSuggestionsList.innerHTML = "";
             suggestions.forEach(suggestion => {
                 const domNode = parseSuggestionToDOM(suggestion);
@@ -1522,7 +1522,7 @@
             
             const toggle = document.createElement("div");
             toggle.className = "tech-card-steps-toggle";
-            toggle.textContent = "💡 Next Steps / Action";
+            toggle.textContent = "Next Steps / Action";
             
             const body = document.createElement("div");
             body.className = "tech-card-steps-body";
@@ -1569,8 +1569,7 @@
             const tdStatus = document.createElement("td");
             const statusSpan = document.createElement("span");
             statusSpan.className = "metadata-status " + (info.status || "normal");
-            const statusIcons = { normal: "✓", suspicious: "⚠", missing: "?" };
-            statusSpan.textContent = (statusIcons[info.status] || "") + " " + (info.status || "");
+            statusSpan.textContent = info.status || "";
             tdStatus.appendChild(statusSpan);
 
             tr.appendChild(tdField);
