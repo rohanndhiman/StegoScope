@@ -13,6 +13,6 @@
     }
   ],
   "env": {
-    "MONGO_URI": "mongodb+srv://rohandhiman300_db_user:lWvrDpmPet6fkKGc@cluster0.fe33oxa.mongodb.net/?retryWrites=true&w=majority"
+    "MONGO_URI": "mongodb+srv://rohandhiman300_db_user:lWvrDpmPet6fkKGc@cluster0.fe33oxa.mongodb.net/?retryWrites=true"
   }
 }
