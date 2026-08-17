@@ -192,10 +192,11 @@
 
             <!-- Upgrade: Tabs Navigation -->
             <div class="results-tabs" role="tablist">
-                <button class="tab-btn active" id="tab-scores-btn" data-tab="scores" role="tab" aria-selected="true" aria-controls="tab-scores-content">📊 Forensic Scores</button>
+                <button class="tab-btn active" id="tab-scores-btn" data-tab="scores" role="tab" aria-selected="true" aria-controls="tab-scores-content">DETECTION</button>
+                <button class="tab-btn" id="tab-details-btn" data-tab="details" role="tab" aria-selected="false" aria-controls="tab-details-content">DETAILS</button>
                 <button class="tab-btn" id="tab-stegsolve-btn" data-tab="stegsolve" role="tab" aria-selected="false" aria-controls="tab-stegsolve-content">🔍 Stegsolve Explorer</button>
-                <button class="tab-btn" id="tab-strings-btn" data-tab="strings" role="tab" aria-selected="false" aria-controls="tab-strings-content">📜 Strings Scan</button>
-                <button class="tab-btn" id="tab-binwalk-btn" data-tab="binwalk" role="tab" aria-selected="false" aria-controls="tab-binwalk-content">📦 Binwalk Extract</button>
+                <button class="tab-btn" id="tab-strings-btn" data-tab="strings" role="tab" aria-selected="false" aria-controls="tab-strings-content">STRINGS</button>
+                <button class="tab-btn" id="tab-binwalk-btn" data-tab="binwalk" role="tab" aria-selected="false" aria-controls="tab-binwalk-content">BEHAVIOR</button>
                 <button class="tab-btn" id="tab-steghide-btn" data-tab="steghide" role="tab" aria-selected="false" aria-controls="tab-steghide-content">🔑 Steghide Decrypt</button>
             </div>
 
@@ -219,6 +220,41 @@
                         </thead>
                         <tbody id="vt-engines-body">
                             <!-- Populated by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Tab Content: DETAILS -->
+            <div class="tab-content" id="tab-details-content" role="tabpanel" aria-labelledby="tab-details-btn" style="display: none;">
+                <div class="vt-details-card">
+                    <h3 class="vt-details-title">Basic Properties</h3>
+                    <table class="vt-details-table">
+                        <tbody>
+                            <tr>
+                                <td class="vt-details-label">MD5</td>
+                                <td class="vt-details-val" id="vt-detail-md5">-</td>
+                            </tr>
+                            <tr>
+                                <td class="vt-details-label">SHA-1</td>
+                                <td class="vt-details-val" id="vt-detail-sha1">-</td>
+                            </tr>
+                            <tr>
+                                <td class="vt-details-label">SHA-256</td>
+                                <td class="vt-details-val" id="vt-detail-sha256">-</td>
+                            </tr>
+                            <tr>
+                                <td class="vt-details-label">File type</td>
+                                <td class="vt-details-val" id="vt-detail-type">-</td>
+                            </tr>
+                            <tr>
+                                <td class="vt-details-label">Magic bytes</td>
+                                <td class="vt-details-val" id="vt-detail-magic">-</td>
+                            </tr>
+                            <tr>
+                                <td class="vt-details-label">File size</td>
+                                <td class="vt-details-val" id="vt-detail-size">-</td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
