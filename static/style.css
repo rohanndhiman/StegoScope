@@ -214,6 +214,49 @@ body.theme-classic {
     --grid-color:        rgba(245, 158, 11, 0.07);
 }
 
+/* 5. Light Mode Overrides (Global) */
+body.light-mode {
+    --bg-primary:        #f8fafc;
+    --bg-secondary:      #f1f5f9;
+    --bg-tertiary:       #e2e8f0;
+    --bg-card:           rgba(255, 255, 255, 0.9);
+    --bg-glass:          rgba(255, 255, 255, 0.8);
+    
+    --text-primary:      #0f172a;
+    --text-secondary:    #334155;
+    --text-muted:        #64748b;
+    
+    --border-default:    rgba(15, 23, 42, 0.15);
+    --border-subtle:     rgba(15, 23, 42, 0.08);
+    
+    --grid-color:        rgba(15, 23, 42, 0.05);
+}
+
+/* Specific light-mode glass overrides to fix contrast */
+body.light-mode.theme-glass .mode-card,
+body.light-mode.theme-glass .result-card,
+body.light-mode.theme-glass .upload-area,
+body.light-mode.theme-glass .drop-zone,
+body.light-mode.theme-glass .technique-card,
+body.light-mode.theme-glass .file-info,
+body.light-mode.theme-glass .ctf-panel,
+body.light-mode.theme-glass .app-header,
+body.light-mode.theme-glass .settings-panel,
+body.light-mode.theme-glass .history-drawer,
+body.light-mode.theme-glass .control-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.3) 100%) !important;
+    border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05), inset 0 1px 1px 0 rgba(255, 255, 255, 0.5) !important;
+}
+
+body.light-mode.theme-glass .mode-btn *,
+body.light-mode.theme-glass .back-btn *,
+body.light-mode.theme-glass .settings-toggle-btn *,
+body.light-mode.theme-glass .history-trigger-btn *,
+body.light-mode.theme-glass .analyze-btn * {
+    color: #ffffff !important;
+}
+
 /* Dynamic background grid updating based on theme variable */
 body::before {
     content: '';
