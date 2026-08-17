@@ -407,43 +407,35 @@ body {
 }
 
 .app-logo-icon {
-    width: 48px;
-    height: 48px;
-    background: transparent;
-    border-radius: var(--radius-md);
+    width: 44px;
+    height: 44px;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: none;
     flex-shrink: 0;
 }
 
-.logo-svg {
+.logo-img {
     width: 100%;
     height: 100%;
+    object-fit: contain;
 }
 
-/* Default Dark theme: Hide light logo, show dark logo, color target lines white */
-.logo-svg.light-logo {
+/* Theme visibility control */
+.logo-img-light {
     display: none;
 }
 
-.logo-svg.dark-logo {
+.logo-img-dark {
     display: block;
 }
 
-.logo-svg.dark-logo circle,
-.logo-svg.dark-logo line {
-    stroke: var(--text-primary) !important;
+body.light-mode .logo-img-light {
+    display: block;
 }
 
-/* Light theme overrides: Hide dark logo, show light logo */
-body.light-mode .logo-svg.dark-logo {
+body.light-mode .logo-img-dark {
     display: none;
-}
-
-body.light-mode .logo-svg.light-logo {
-    display: block;
 }
 
 .app-title-group {

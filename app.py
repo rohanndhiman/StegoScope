@@ -158,7 +158,9 @@ def login():
     </head>
     <body>
         <div class="login-box">
-            <div class="logo-icon">SS</div>
+            <div class="logo-icon">
+                <img src="/static/logo_dark.png" style="width:100%; height:100%; object-fit:contain;" alt="StegoScope Logo">
+            </div>
             <h1>StegoScope</h1>
             <p class="subtitle">Authentication Required</p>
             {% if error %}<div class="error">{{ error }}</div>{% endif %}
