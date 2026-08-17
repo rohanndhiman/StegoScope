@@ -158,13 +158,38 @@
              Screen 3: Results
              ============================================================ -->
         <section id="screen-results" class="screen">
-            <!-- Results header with score gauge -->
-            <div class="results-header">
+            <!-- Malware Mode: VirusTotal-style Report Header -->
+            <div class="vt-report-header" id="vt-report-header" style="display: none;">
+                <div class="vt-summary-banner">
+                    <div class="vt-detection-ring" id="vt-detection-ring">
+                        <div class="vt-detection-inner">
+                            <span class="vt-detected-count" id="vt-detected-count">0</span>
+                            <span class="vt-detected-sep">/</span>
+                            <span class="vt-total-count" id="vt-total-count">0</span>
+                        </div>
+                    </div>
+                    <div class="vt-summary-details">
+                        <span class="vt-verdict-badge" id="vt-verdict-badge">Undetected</span>
+                        <div class="vt-file-identity">
+                            <span class="vt-filename" id="vt-filename">file.png</span>
+                            <span class="vt-type-badge" id="vt-type-badge">IMAGE</span>
+                            <span class="vt-filesize" id="vt-filesize">0 B</span>
+                        </div>
+                        <div class="vt-hash-row">
+                            <span class="vt-hash-label">SHA-256</span>
+                            <code class="vt-hash-value" id="vt-hash-value">computing…</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTF Mode: Results header with score gauge -->
+            <div class="results-header" id="ctf-results-header">
                 <div class="score-gauge" id="score-gauge">
                     <div class="score-gauge-ring" id="score-gauge-ring">
                         <div class="score-gauge-inner">
                             <span class="score-gauge-value" id="score-value">0</span>
-                            <span class="score-gauge-label">overall</span>
+                            <span class="score-gauge-label" id="score-gauge-label">overall</span>
                         </div>
                     </div>
                 </div>
@@ -188,7 +213,25 @@
             <!-- Tab Content 1: Forensic Scores Grid -->
             <div class="tab-content active" id="tab-scores-content" role="tabpanel" aria-labelledby="tab-scores-btn">
                 <div class="techniques-grid" id="techniques-grid">
-                    <!-- Populated by JS -->
+                    <!-- Populated by JS (CTF mode) -->
+                </div>
+                <div class="vt-detection-wrap" id="vt-detection-wrap" style="display: none;">
+                    <div class="vt-section-title">
+                        <h3>🔬 Detection Engines</h3>
+                        <span class="vt-engines-count" id="vt-engines-count"></span>
+                    </div>
+                    <table class="vt-engines-table">
+                        <thead>
+                            <tr>
+                                <th>Engine</th>
+                                <th>Confidence</th>
+                                <th>Result</th>
+                            </tr>
+                        </thead>
+                        <tbody id="vt-engines-body">
+                            <!-- Populated by JS -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
 

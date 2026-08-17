@@ -1080,6 +1080,71 @@
     });
 
     // -----------------------------------------------------------------------
+    // VirusTotal-style Malware Report Helpers
+    // -----------------------------------------------------------------------
+    async function computeFileHash(file) {
+        try {
+            const buffer = await file.arrayBuffer();
+            const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        } catch (e) {
+            return 'unavailable';
+        }
+    }
+
+    function renderDetectionTable(techniques) {
+        const enginesBody = document.getElementById("vt-engines-body");
+        enginesBody.innerHTML = "";
+        const sorted = [...techniques].sort((a, b) => b.score - a.score);
+        const detected = sorted.filter(t => t.score > 35).length;
+        document.getElementById("vt-engines-count").textContent =
+            `${detected} of ${sorted.length} engines flagged`;
+
+        sorted.forEach((tech, idx) => {
+            const sev = getSeverity(tech.score);
+            const tr = document.createElement("tr");
+            tr.className = "vt-engine-row " + sev.cls;
+            tr.style.animationDelay = `${idx * 0.05}s`;
+
+            const tdName = document.createElement("td");
+            tdName.className = "vt-engine-name";
+            const icon = document.createElement("span");
+            icon.className = "vt-engine-icon " + sev.cls;
+            icon.textContent = sev.cls === "high" ? "✕" : sev.cls === "moderate" ? "⚠" : "✓";
+            tdName.appendChild(icon);
+            const nameText = document.createElement("span");
+            nameText.textContent = tech.name;
+            tdName.appendChild(nameText);
+
+            const tdScore = document.createElement("td");
+            tdScore.className = "vt-engine-score-cell";
+            const barWrap = document.createElement("div");
+            barWrap.className = "vt-confidence-bar";
+            const barFill = document.createElement("div");
+            barFill.className = "vt-confidence-fill " + sev.cls;
+            barFill.style.width = tech.score + "%";
+            barWrap.appendChild(barFill);
+            const scoreLbl = document.createElement("span");
+            scoreLbl.className = "vt-confidence-label";
+            scoreLbl.textContent = tech.score + "%";
+            tdScore.appendChild(barWrap);
+            tdScore.appendChild(scoreLbl);
+
+            const tdResult = document.createElement("td");
+            const badge = document.createElement("span");
+            badge.className = "vt-result-badge " + sev.cls;
+            badge.textContent = sev.cls === "high" ? "Detected" : sev.cls === "moderate" ? "Suspicious" : "Undetected";
+            tdResult.appendChild(badge);
+
+            tr.appendChild(tdName);
+            tr.appendChild(tdScore);
+            tr.appendChild(tdResult);
+            enginesBody.appendChild(tr);
+        });
+    }
+
+    // -----------------------------------------------------------------------
     // Results rendering & component builders
     // -----------------------------------------------------------------------
     function parseSuggestionToDOM(text) {
@@ -1135,63 +1200,120 @@
         const score = data.overall_score;
         const severity = getSeverity(score);
 
-        // Animate counter ring
-        animateScore(score, severity.color);
-
-        overallBadge.textContent = data.overall_label;
-        overallBadge.className = "severity-badge " + severity.cls;
-        resultFilename.textContent = data.filename;
-
-        const typeLabel = data.file_type === "image" ? "image" : "audio";
-        overallSummary.innerHTML =
-            `Analysis complete for <strong>${escapeHtml(data.filename)}</strong> (${typeLabel})`;
-
-        // Cache files and strings data for tab viewers
+        // Cache data for tab viewers
         originalImageSrc = data.original_file;
         extractedStrings = (data.strings_data && data.strings_data.strings) || [];
         binwalkFiles = data.binwalk_files || [];
-        
-        // Hide/Show tabs based on mode
-        const tabSteghideBtn = document.getElementById("tab-steghide-btn");
-        
+
+        const vtHeader = document.getElementById("vt-report-header");
+        const ctfHeader = document.getElementById("ctf-results-header");
+        const tabsBar = document.querySelector(".results-tabs");
+        const vtWrap = document.getElementById("vt-detection-wrap");
+
         if (currentMode === "malware") {
-            // Malware mode doesn't need Stegsolve or Steghide
-            tabStegsolveBtn.style.display = "none";
-            if (tabSteghideBtn) tabSteghideBtn.style.display = "none";
+            // ====== MALWARE: VirusTotal-style inline report ======
+            vtHeader.style.display = "block";
+            ctfHeader.style.display = "none";
+            tabsBar.style.display = "none";
+            vtWrap.style.display = "block";
+            techniquesGrid.style.display = "none";
+
+            // Detection ratio
+            const detected = data.techniques.filter(t => t.score > 35).length;
+            const total = data.techniques.length;
+            document.getElementById("vt-detected-count").textContent = detected;
+            document.getElementById("vt-total-count").textContent = total;
+
+            // Verdict
+            let verdict, verdictCls;
+            if (detected === 0) { verdict = "No Threats Detected"; verdictCls = "clean"; }
+            else if (detected <= Math.ceil(total / 2)) { verdict = "Suspicious"; verdictCls = "suspicious"; }
+            else { verdict = "Malicious"; verdictCls = "malicious"; }
+            const vBadge = document.getElementById("vt-verdict-badge");
+            vBadge.textContent = verdict;
+            vBadge.className = "vt-verdict-badge " + verdictCls;
+
+            // File identity
+            document.getElementById("vt-filename").textContent = data.filename;
+            document.getElementById("vt-type-badge").textContent = data.file_type.toUpperCase();
+            if (selectedFile && selectedFile.size > 0) {
+                document.getElementById("vt-filesize").textContent = formatSize(selectedFile.size);
+            }
+
+            // Detection ring animation
+            const ratio = total > 0 ? detected / total : 0;
+            const ringColor = detected === 0 ? "var(--color-low)" : ratio <= 0.5 ? "var(--color-moderate)" : "var(--color-high)";
+            const angle = ratio * 360;
+            document.getElementById("vt-detection-ring").style.background =
+                `conic-gradient(${ringColor} ${angle}deg, var(--bg-tertiary) ${angle}deg)`;
+
+            // SHA-256 hash
+            if (selectedFile && selectedFile.size > 0) {
+                document.getElementById("vt-hash-value").textContent = "computing\u2026";
+                computeFileHash(selectedFile).then(hash => {
+                    document.getElementById("vt-hash-value").textContent = hash;
+                });
+            }
+
+            // Detection table
+            renderDetectionTable(data.techniques);
+
+            // Show all relevant sections inline (no tab switching)
+            document.getElementById("tab-scores-content").style.display = "block";
+            document.getElementById("tab-strings-content").style.display = "block";
+            document.getElementById("tab-binwalk-content").style.display = "block";
+            document.getElementById("tab-stegsolve-content").style.display = "none";
+            document.getElementById("tab-steghide-content").style.display = "none";
+
         } else {
-            // CTF mode uses Stegsolve (for images) and Steghide
+            // ====== CTF: Transparency Score + Tabbed tools ======
+            vtHeader.style.display = "none";
+            ctfHeader.style.display = "block";
+            tabsBar.style.display = "flex";
+            vtWrap.style.display = "none";
+            techniquesGrid.style.display = "grid";
+
+            // Gauge — "transparency" label
+            document.getElementById("score-gauge-label").textContent = "transparency";
+            animateScore(score, severity.color);
+
+            overallBadge.textContent = data.overall_label;
+            overallBadge.className = "severity-badge " + severity.cls;
+            resultFilename.textContent = data.filename;
+            overallSummary.innerHTML =
+                `Analysis complete for <strong>${escapeHtml(data.filename)}</strong> (${data.file_type})`;
+
+            // Tab visibility
+            const tabSteghideBtn = document.getElementById("tab-steghide-btn");
             tabStegsolveBtn.style.display = (data.file_type === "image") ? "inline-block" : "none";
             if (tabSteghideBtn) tabSteghideBtn.style.display = "inline-block";
             if (data.file_type === "image") setupStegsolve(data.original_file);
+
+            // Technique cards
+            techniquesGrid.innerHTML = "";
+            data.techniques.forEach((tech, index) => {
+                const card = createTechniqueCard(tech, index, data);
+                techniquesGrid.appendChild(card);
+            });
+
+            // Default to scores tab
+            switchTab("scores");
         }
 
-        // Render Forensic Scores technique cards
-        techniquesGrid.innerHTML = "";
-        data.techniques.forEach((tech, index) => {
-            const card = createTechniqueCard(tech, index, data);
-            techniquesGrid.appendChild(card);
-        });
-
-        // Initialize strings, binwalk, steghide panels
+        // ====== COMMON: panels ======
         renderStrings("");
         stringsSearch.value = "";
         renderBinwalkTable(data.binwalk_files || []);
-        
         steghidePassphrase.value = "";
         steghideResultBox.style.display = "none";
 
-        // Render recommendations (for both Malware and CTF modes)
+        // Recommendations
         const suggestions = data.suggestions || data.ctf_suggestions || [];
         if (suggestions.length > 0) {
             ctfPanel.style.display = "block";
-            
-            // Override header title dynamically
-            if (currentMode === "ctf") {
-                ctfPanelTitle.innerHTML = "🧩 Action Plan &amp; CTF Hints";
-            } else {
-                ctfPanelTitle.innerHTML = "🛡️ Forensic Recommendations &amp; Action Plan";
-            }
-            
+            ctfPanelTitle.innerHTML = currentMode === "ctf"
+                ? "🧩 Action Plan &amp; CTF Hints"
+                : "🛡️ Forensic Recommendations &amp; Action Plan";
             ctfSuggestionsList.innerHTML = "";
             suggestions.forEach(suggestion => {
                 const domNode = parseSuggestionToDOM(suggestion);
@@ -1201,11 +1323,7 @@
             ctfPanel.style.display = "none";
         }
 
-        // Save scan result to local history
         addScanToHistory(data.filename, data.file_type, data.overall_score, data.overall_label, data);
-
-        // Switch to the scores tab
-        switchTab("scores");
         showScreen("results");
     }
 
@@ -1450,6 +1568,13 @@
         originalImageSrc = null;
         extractedStrings = [];
         binwalkFiles = [];
+
+        // Reset VT/CTF layout
+        document.getElementById("vt-report-header").style.display = "none";
+        document.getElementById("ctf-results-header").style.display = "block";
+        document.querySelector(".results-tabs").style.display = "flex";
+        document.getElementById("vt-detection-wrap").style.display = "none";
+        techniquesGrid.style.display = "grid";
 
         scoreValue.textContent = "0";
         scoreGaugeRing.style.background =

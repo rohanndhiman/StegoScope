@@ -2402,3 +2402,444 @@ body {
     display: block;
 }
 
+/* -----------------------------------------------------------------------
+   Layout Gap Fixes — Tighter Results Flow
+   ----------------------------------------------------------------------- */
+.results-header {
+    margin-bottom: 1rem;
+}
+
+.techniques-grid {
+    margin-bottom: 1rem;
+}
+
+.ctf-panel {
+    margin-bottom: 1rem;
+}
+
+.disclaimer {
+    margin-bottom: 1rem;
+}
+
+.results-tabs {
+    margin-bottom: 0.75rem;
+}
+
+/* -----------------------------------------------------------------------
+   VirusTotal-style Malware Report
+   ----------------------------------------------------------------------- */
+.vt-report-header {
+    margin-bottom: 1rem;
+    animation: fadeIn var(--transition-med) ease forwards;
+}
+
+.vt-summary-banner {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem 2.5rem;
+    background: var(--bg-glass);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+}
+
+.vt-detection-ring {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    background: conic-gradient(var(--text-muted) 0deg, var(--bg-tertiary) 0deg);
+    transition: background 0.6s ease;
+}
+
+.vt-detection-ring::before {
+    content: '';
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    background: var(--bg-primary);
+}
+
+.vt-detection-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    line-height: 1.1;
+}
+
+.vt-detected-count {
+    font-size: 2.2rem;
+    font-weight: 700;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-primary);
+}
+
+.vt-detected-sep {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0.1rem 0;
+}
+
+.vt-total-count {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.vt-summary-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.vt-verdict-badge {
+    display: inline-block;
+    padding: 0.35rem 1.1rem;
+    border-radius: var(--radius-xl);
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    width: fit-content;
+}
+
+.vt-verdict-badge.clean {
+    background: var(--color-low-bg);
+    color: var(--color-low);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.vt-verdict-badge.suspicious {
+    background: var(--color-moderate-bg);
+    color: var(--color-moderate);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.vt-verdict-badge.malicious {
+    background: var(--color-high-bg);
+    color: var(--color-high);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.vt-file-identity {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.vt-filename {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--text-primary);
+    word-break: break-all;
+}
+
+.vt-type-badge {
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: var(--radius-sm);
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-default);
+    color: var(--accent-color);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.vt-filesize {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.vt-hash-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.vt-hash-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+}
+
+.vt-hash-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    background: var(--bg-tertiary);
+    padding: 0.2rem 0.5rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-subtle);
+    word-break: break-all;
+    user-select: all;
+}
+
+/* -----------------------------------------------------------------------
+   Detection Engines Table
+   ----------------------------------------------------------------------- */
+.vt-detection-wrap {
+    margin-bottom: 1rem;
+}
+
+.vt-section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.vt-section-title h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.vt-engines-count {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.vt-engines-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--bg-glass);
+    backdrop-filter: var(--blur-glass);
+    -webkit-backdrop-filter: var(--blur-glass);
+    border: 1px solid var(--border-default);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+}
+
+.vt-engines-table thead th {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.7rem 1.25rem;
+    text-align: left;
+    border-bottom: 1px solid var(--border-default);
+}
+
+.vt-engine-row {
+    transition: background var(--transition-fast);
+    animation: vtRowSlide 0.3s ease forwards;
+    opacity: 0;
+}
+
+@keyframes vtRowSlide {
+    from { opacity: 0; transform: translateX(-8px); }
+    to   { opacity: 1; transform: translateX(0); }
+}
+
+.vt-engine-row:hover {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.vt-engine-row td {
+    padding: 0.75rem 1.25rem;
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 0.85rem;
+    vertical-align: middle;
+}
+
+.vt-engine-row:last-child td {
+    border-bottom: none;
+}
+
+.vt-engine-name {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.vt-engine-icon {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 0.7rem;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.vt-engine-icon.low {
+    background: var(--color-low-bg);
+    color: var(--color-low);
+}
+
+.vt-engine-icon.moderate {
+    background: var(--color-moderate-bg);
+    color: var(--color-moderate);
+}
+
+.vt-engine-icon.high {
+    background: var(--color-high-bg);
+    color: var(--color-high);
+}
+
+.vt-engine-score-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 150px;
+}
+
+.vt-confidence-bar {
+    flex: 1;
+    height: 6px;
+    background: var(--bg-tertiary);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.vt-confidence-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.vt-confidence-fill.low {
+    background: var(--color-low);
+}
+
+.vt-confidence-fill.moderate {
+    background: var(--color-moderate);
+}
+
+.vt-confidence-fill.high {
+    background: var(--color-high);
+}
+
+.vt-confidence-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    min-width: 38px;
+    text-align: right;
+}
+
+.vt-result-badge {
+    display: inline-block;
+    padding: 0.2rem 0.65rem;
+    border-radius: var(--radius-xl);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.vt-result-badge.low {
+    background: var(--color-low-bg);
+    color: var(--color-low);
+}
+
+.vt-result-badge.moderate {
+    background: var(--color-moderate-bg);
+    color: var(--color-moderate);
+}
+
+.vt-result-badge.high {
+    background: var(--color-high-bg);
+    color: var(--color-high);
+}
+
+/* -----------------------------------------------------------------------
+   Inline section flow for malware mode (tab-content shown without tabs)
+   ----------------------------------------------------------------------- */
+#screen-results .tab-content + .tab-content {
+    margin-top: 1rem;
+}
+
+/* -----------------------------------------------------------------------
+   Glass theme overrides for VT report
+   ----------------------------------------------------------------------- */
+body.theme-glass .vt-summary-banner,
+body.theme-glass .vt-engines-table {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%) !important;
+    backdrop-filter: blur(28px) saturate(190%) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    border-radius: 20px !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), inset 0 1px 1px 0 rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Light mode VT report overrides */
+body.light-mode .vt-summary-banner,
+body.light-mode .vt-engines-table {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06) !important;
+}
+
+body.light-mode .vt-detection-ring::before {
+    background: var(--bg-primary);
+}
+
+body.light-mode .vt-hash-value {
+    background: rgba(0, 0, 0, 0.04);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* -----------------------------------------------------------------------
+   VT Report Responsive
+   ----------------------------------------------------------------------- */
+@media (max-width: 768px) {
+    .vt-summary-banner {
+        flex-direction: column;
+        text-align: center;
+        gap: 1.25rem;
+        padding: 1.5rem;
+    }
+
+    .vt-file-identity {
+        justify-content: center;
+    }
+
+    .vt-hash-row {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .vt-detection-ring {
+        width: 100px;
+        height: 100px;
+    }
+
+    .vt-detected-count {
+        font-size: 1.8rem;
+    }
+
+    .vt-engine-score-cell {
+        min-width: 100px;
+    }
+
+    .vt-engines-table thead th,
+    .vt-engine-row td {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.75rem;
+    }
+}
+
