@@ -1139,13 +1139,18 @@
             const sevL = getSeverity(techL.score);
             const tdNameL = document.createElement("td");
             tdNameL.className = "vt-engine-name";
+            
+            const contentL = document.createElement("div");
+            contentL.className = "vt-engine-name-content";
+            
             const iconL = document.createElement("span");
             iconL.className = "vt-engine-icon " + sevL.cls;
             iconL.textContent = sevL.cls === "high" ? "✕" : "✓";
-            tdNameL.appendChild(iconL);
+            contentL.appendChild(iconL);
             const nameTextL = document.createElement("span");
             nameTextL.textContent = nameL;
-            tdNameL.appendChild(nameTextL);
+            contentL.appendChild(nameTextL);
+            tdNameL.appendChild(contentL);
 
             const tdResultL = document.createElement("td");
             tdResultL.className = "vt-engine-result-col";
@@ -1164,13 +1169,18 @@
                 const sevR = getSeverity(techR.score);
                 const tdNameR = document.createElement("td");
                 tdNameR.className = "vt-engine-name";
+                
+                const contentR = document.createElement("div");
+                contentR.className = "vt-engine-name-content";
+                
                 const iconR = document.createElement("span");
                 iconR.className = "vt-engine-icon " + sevR.cls;
                 iconR.textContent = sevR.cls === "high" ? "✕" : "✓";
-                tdNameR.appendChild(iconR);
+                contentR.appendChild(iconR);
                 const nameTextR = document.createElement("span");
                 nameTextR.textContent = nameR;
-                tdNameR.appendChild(nameTextR);
+                contentR.appendChild(nameTextR);
+                tdNameR.appendChild(contentR);
 
                 const tdResultR = document.createElement("td");
                 tdResultR.className = "vt-engine-result-col";

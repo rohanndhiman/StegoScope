@@ -2518,10 +2518,13 @@ body {
     padding: 0.85rem 1.25rem;
     border-bottom: 1px solid var(--border-subtle);
     font-size: 0.85rem;
+    vertical-align: middle;
 }
 
 .vt-engines-table td.vt-engine-name {
     width: 35%;
+    font-weight: 500;
+    color: var(--text-primary);
 }
 
 .vt-engines-table td.vt-engine-result-col {
@@ -2536,12 +2539,10 @@ body {
     border-bottom: none;
 }
 
-.vt-engine-name {
+.vt-engine-name-content {
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    font-weight: 500;
-    color: var(--text-primary);
 }
 
 .vt-engine-icon {
