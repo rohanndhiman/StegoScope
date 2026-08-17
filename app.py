@@ -13,14 +13,11 @@ from flask import Flask, request, jsonify, send_from_directory, session, redirec
 from detectors.lsb import analyze as lsb_analyze
 from detectors.metadata import analyze as metadata_analyze
 from detectors.ela import analyze as ela_analyze
-from detectors.audio_spectrogram import analyze as spectrogram_analyze
-from detectors.audio_lsb import analyze as audio_lsb_analyze
 
 # New Linux-style detectors
 from detectors.eof import analyze as eof_analyze
 from detectors.binwalk import analyze as binwalk_analyze
 from detectors.strings import analyze as strings_analyze
-from detectors.steghide import analyze as steghide_analyze
 
 from ctf_helper import get_ctf_suggestions
 
@@ -327,6 +324,7 @@ def analyze():
                 technique_results.append(metadata_analyze(file_bytes, file_type))
                 technique_results.append(ela_analyze(file_bytes, file_type))
             else:
+                from detectors.audio_spectrogram import analyze as spectrogram_analyze
                 technique_results.append(spectrogram_analyze(file_bytes, file_type))
             
             eof_res = eof_analyze(file_bytes, file_type)
@@ -353,11 +351,14 @@ def analyze():
 
         else:
             # CTF MODE: Focus on LSB stego, flags, steghide, binwalk hidden zips
+            from detectors.steghide import analyze as steghide_analyze
             if category == "image":
                 technique_results.append(lsb_analyze(file_bytes, file_type))
                 # Exif is also useful in CTF
                 technique_results.append(metadata_analyze(file_bytes, file_type))
             else:
+                from detectors.audio_lsb import analyze as audio_lsb_analyze
+                from detectors.audio_spectrogram import analyze as spectrogram_analyze
                 technique_results.append(audio_lsb_analyze(file_bytes, file_type))
                 technique_results.append(spectrogram_analyze(file_bytes, file_type))
 
