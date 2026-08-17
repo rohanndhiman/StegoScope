@@ -483,7 +483,8 @@ def save_history():
         
     try:
         # Check if there's a large payload in 'original_file' to store in GridFS
-        original_file_b64 = data.get('original_file')
+        inner_data = data.get('data', {})
+        original_file_b64 = inner_data.get('original_file')
         if original_file_b64 and len(original_file_b64) > 1000:
             import base64
             # Strip data:image/...;base64, prefix if present
@@ -495,7 +496,7 @@ def save_history():
             file_bytes = base64.b64decode(b64_data)
             file_id = fs.put(file_bytes, filename=data.get('filename', 'scan_image'))
             data['gridfs_id'] = str(file_id)
-            del data['original_file'] # Remove from document to save space
+            del data['data']['original_file'] # Remove from document to save space
             
         data['timestamp'] = datetime.datetime.utcnow()
         result = db.scan_history.insert_one(data)
