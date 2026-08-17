@@ -31,12 +31,12 @@
     --color-high:         #f87171;
     --color-high-bg:      rgba(248, 113, 113, 0.08);
     
-    /* Linear Accent: Lavender-Blue */
-    --accent-blue:       #5e6ad2;
-    --accent-purple:     #8a99ad;
-    --accent-cyan:       #38bdf8;
-    --accent-color:      #5e6ad2;
-    --glow-color:        rgba(94, 106, 210, 0.15);
+    /* Simple, clean colors (no bright blues/purples) */
+    --accent-blue:       #f7f8f8;
+    --accent-purple:     #70737d;
+    --accent-cyan:       #b4bcd0;
+    --accent-color:      #f7f8f8;
+    --glow-color:        rgba(255, 255, 255, 0.05);
     
     /* Effects */
     --shadow-lg:   0 20px 40px rgba(0, 0, 0, 0.85);
@@ -68,10 +68,10 @@ body.theme-classic {
     --bg-card:           #0f0f12;
     --bg-glass:          #08080a;
     --border-default:    #1e1e24;
-    --accent-color:      #5e6ad2;
-    --accent-blue:       #5e6ad2;
-    --glow-color:        rgba(94, 106, 210, 0.15);
-    --grid-color:        rgba(94, 106, 210, 0.03);
+    --accent-color:      #f7f8f8;
+    --accent-blue:       #f7f8f8;
+    --glow-color:        rgba(255, 255, 255, 0.05);
+    --grid-color:        rgba(255, 255, 255, 0.01);
 }
 
 /* Translucent Card Override to blend flat-technical */
@@ -98,12 +98,12 @@ body.theme-glass .back-btn,
 body.theme-glass .settings-toggle-btn,
 body.theme-glass .history-trigger-btn,
 body.theme-glass .analyze-btn {
-    background: #5e6ad2 !important;
-    color: #ffffff !important;
+    background: #18181b !important;
+    color: #f7f8f8 !important;
     font-weight: 500 !important;
-    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    border: 1px solid #27272a !important;
     border-radius: 6px !important;
-    box-shadow: 0 4px 12px rgba(94, 106, 210, 0.25) !important;
+    box-shadow: none !important;
 }
 
 body.theme-glass .mode-btn *,
@@ -368,7 +368,7 @@ html {
 }
 
 body {
-    font-family: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     background-color: var(--bg-primary);
     color: var(--text-primary);
     min-height: 100vh;
@@ -409,13 +409,13 @@ body {
 .app-logo-icon {
     width: 48px;
     height: 48px;
-    background: var(--accent-blue);
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
     border-radius: var(--radius-md);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 1.5rem;
-    box-shadow: 0 0 20px rgba(94, 106, 210, 0.2);
+    box-shadow: 0 0 20px rgba(88, 166, 255, 0.3);
     flex-shrink: 0;
 }
 
@@ -429,7 +429,10 @@ body {
     font-size: 1.8rem;
     font-weight: 700;
     line-height: 1.2;
-    color: var(--text-primary);
+    background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
     letter-spacing: -0.02em;
 }
 
@@ -512,9 +515,9 @@ body {
     align-items: center;
     gap: 0.5rem;
     padding: 0.6rem 1.5rem;
-    background: var(--accent-blue);
-    color: #fff;
-    border: none;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-default);
     border-radius: var(--radius-md);
     font-size: 0.9rem;
     font-weight: 500;
@@ -523,9 +526,9 @@ body {
 }
 
 .mode-btn:hover {
-    background: #6e7be2;
+    background: var(--bg-secondary);
+    border-color: var(--text-muted);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(94, 106, 210, 0.3);
 }
 
 /* -----------------------------------------------------------------------
@@ -596,8 +599,8 @@ body {
 }
 
 .drop-zone.dragover {
-    border-color: var(--accent-blue);
-    background: rgba(94, 106, 210, 0.04);
+    border-color: var(--text-primary);
+    background: var(--bg-secondary);
 }
 
 .drop-zone.has-file {
@@ -683,9 +686,9 @@ body {
     width: 100%;
     padding: 0.85rem;
     margin-top: 1.5rem;
-    background: var(--accent-blue);
-    color: #fff;
-    border: none;
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    border: 1px solid var(--border-default);
     border-radius: var(--radius-md);
     font-size: 1rem;
     font-weight: 500;
@@ -701,9 +704,9 @@ body {
 }
 
 .analyze-btn:not(:disabled):hover {
-    background: #6e7be2;
+    background: var(--bg-secondary);
+    border-color: var(--text-muted);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(94, 106, 210, 0.35);
 }
 
 /* Loading state */
